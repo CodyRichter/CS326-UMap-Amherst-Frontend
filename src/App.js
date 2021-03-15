@@ -34,18 +34,10 @@ export default function App() {
           {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/">
-              <Home />
-            </Route>
-            <Route path="/classes">
-              <Classes />
-            </Route>
-            <Route path="/stops">
-              <Stops />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
+            <Route path="/" exact component={Home} />
+            <Route path="/classes" component={Classes} />
+            <Route path="/stops" component={Stops} />
+            <Route path="/login" component={Login} />
           </Switch>
         </div>
       </Router>
