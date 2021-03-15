@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+}
+
+.pageContainer {
+    margin-top: 10vh;
+}
+
+.innerPage {
+    background-color: lightgrey;
+    min-height: 40vh;
+    border-radius: 1em;
+    padding: 1em;
+}
