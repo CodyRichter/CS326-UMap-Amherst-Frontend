@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/CS326-UMap-Amherst-Frontend/static/css/main.9167b0f4.chunk.css",
+    "main.js": "/CS326-UMap-Amherst-Frontend/static/js/main.0826996a.chunk.js",
+    "main.js.map": "/CS326-UMap-Amherst-Frontend/static/js/main.0826996a.chunk.js.map",
+    "runtime-main.js": "/CS326-UMap-Amherst-Frontend/static/js/runtime-main.ec295ee1.js",
+    "runtime-main.js.map": "/CS326-UMap-Amherst-Frontend/static/js/runtime-main.ec295ee1.js.map",
+    "static/js/2.90d0f8d2.chunk.js": "/CS326-UMap-Amherst-Frontend/static/js/2.90d0f8d2.chunk.js",
+    "static/js/2.90d0f8d2.chunk.js.map": "/CS326-UMap-Amherst-Frontend/static/js/2.90d0f8d2.chunk.js.map",
+    "index.html": "/CS326-UMap-Amherst-Frontend/index.html",
+    "static/css/main.9167b0f4.chunk.css.map": "/CS326-UMap-Amherst-Frontend/static/css/main.9167b0f4.chunk.css.map",
+    "static/js/2.90d0f8d2.chunk.js.LICENSE.txt": "/CS326-UMap-Amherst-Frontend/static/js/2.90d0f8d2.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ec295ee1.js",
+    "static/js/2.90d0f8d2.chunk.js",
+    "static/css/main.9167b0f4.chunk.css",
+    "static/js/main.0826996a.chunk.js"
+  ]
+}
