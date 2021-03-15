@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter,
   Switch,
   Route,
   Link
@@ -10,13 +10,13 @@ import Classes from "./pages/Classes";
 import Stops from "./pages/Stops";
 import Login from "./pages/Login";
 import {AppBar, Button, Grid, IconButton, Toolbar, Typography} from "@material-ui/core";
-import {Map as MapIcon, Stop} from "@material-ui/icons";
+import {Map as MapIcon, } from "@material-ui/icons";
 
 
 export default function App() {
   return (
 
-      <Router>
+      <HashRouter basename={'/'}>
 
         <AppBar position="sticky">
           <Toolbar variant="dense">
@@ -60,6 +60,6 @@ export default function App() {
 
         </Switch>
 
-</Router>
+      </HashRouter>
   );
 }
