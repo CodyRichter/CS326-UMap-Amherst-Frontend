@@ -1,7 +1,7 @@
 /* Classes Dashboard */
 .classes-dashboard {
   width: 100%;
-  height: 500px;
+  height: 100%;
   background: white;
   border-radius: 5px;
 }
@@ -26,4 +26,25 @@
 /* Dashboard title */
 .classes-title {
   font-size: 32px;
+}
+
+/* Class List Display */
+.classes-list {
+  border-top: 1px solid lightgray;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  min-height: 400px;
+  width: 70%;
+}
+
+/* Class List Items */
+.classes-list-item {
+  font-size: 17px;
+  margin: 10px;
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
