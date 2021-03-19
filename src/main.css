@@ -9,6 +9,10 @@ body {
 .innerPage {
     background-color: lightgrey;
     min-height: 40vh;
-    border-radius: 1em;
+    border-radius: 0.5em;
     padding: 1em;
+}
+
+.mapContainer {
+    min-height: 100%;
 }

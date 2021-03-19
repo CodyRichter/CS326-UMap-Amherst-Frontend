@@ -36,7 +36,7 @@ export default function App() {
         <Switch>
           <Grid container direction="row" justify="center" alignItems="center" className={'pageContainer'}>
             <Route path="/" exact>
-              <Grid item xs={8} className={'innerPage'}>
+              <Grid item xs={10} className={'innerPage'}>
                 <Home />
               </Grid>
             </Route>
