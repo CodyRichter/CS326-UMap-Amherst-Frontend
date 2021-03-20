@@ -7,7 +7,7 @@ body {
 }
 
 .innerPage {
-  border: 1px solid lightgrey;
+  background: lightgrey;
   min-height: 40vh;
   border-radius: 1em;
   padding: 1em;
