@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import PersonIcon from '@material-ui/icons/Person';
 import LockIcon from '@material-ui/icons/Lock';
 import Button from '@material-ui/core/Button';
+import {Link} from "react-router-dom";
 
 export default function Login() 
 {
@@ -33,21 +34,25 @@ export default function Login()
           </div>
 
           <div className = "loginButton">
-            <Button variant = "contained"> 
-              Login 
-            </Button>
+              <Link to="/">
+                  <Button variant="contained">
+                      Login
+                  </Button>
+              </Link>
           </div>
 
           <div className = "createAccount">
-            <Button> 
+            <Button>
               Create Account 
             </Button>
           </div>
 
           <div className = "guest">
-            <Button>
-              Use As Guest
-            </Button>
+              <Link to="/">
+                  <Button>
+                      Use as Guest
+                  </Button>
+              </Link>
           </div>
 
       </div>

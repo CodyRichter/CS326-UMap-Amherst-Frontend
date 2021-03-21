@@ -3,7 +3,7 @@ import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
 import TextField from "@material-ui/core/TextField";
 import {DataGrid} from "@material-ui/data-grid";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
+import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import MapIcon from '@material-ui/icons/Map';
@@ -110,7 +110,7 @@ export default class Stops extends React.Component {
                         <Grid container direction="row" justifyContent="flex-end" alignItems="center">
                             <Grid item xs={12} style={{textAlign: "right"}}>
                                 <Link to="/">
-                                    <Button  variant="contained" color="primary" endIcon={<MapIcon />}>
+                                    <Button variant="contained" endIcon={<MapIcon />}>
                                         Return to Map
                                     </Button>
                                 </Link>
