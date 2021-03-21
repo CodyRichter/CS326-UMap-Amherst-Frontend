@@ -9,6 +9,8 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import MapIcon from '@material-ui/icons/Map';
 import SaveIcon from '@material-ui/icons/Save';
 import KeyboardTimePicker from '@material-ui/lab/DateTimePicker';
+import {CardContent, Typography} from "@material-ui/core";
+import Card from "@material-ui/core/Card";
 
 
 export default class Stops extends React.Component {
@@ -81,40 +83,48 @@ export default class Stops extends React.Component {
     render() {
         return (
             <div>
-                {/*Headlining Title*/}
-                <h1>Schedule Pit Stops</h1>
+                <Grid container direction="row" justifyContent="center" alignItems="center" spacing={3}>
 
-                {/*Div for internal data grid*/}
-                <div style={{height: 400, width: '100%'}}>
-                    <DataGrid autoHeight density="headerHeight" rows={this.state.rows} columns={this.state.columns.map((column) => ({
-                        ...column,
-                        disableClickEventBubbling: true,
-                    }))} pageSize={5}
-                              checkboxSelection
-                    onRowSelected={(params) => {
-                        let rs = this.state.rows;
-                        rs[params.data.id].selected = params.isSelected;
-                        this.setState({rows: rs});
-                    }}/>
-                </div>
+                    <Grid item xs={12}>
+                        <Typography variant={'h4'}>Schedule Pit Stops</Typography>
+                    </Grid>
 
-                {/*Div for bottom buttons*/}
-                <div>
-                    <Grid container direction="row" justifyContent={"flex-end"}>
-                        <Grid item xs={3}>
-                            <Link to="/" style={{ textDecoration: 'none' }}>
-                                <Button variant="contained" endIcon={<MapIcon />}>
-                                    Return to Map
-                                </Button>
-                            </Link>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData()}>
-                                Save Pit Stops
-                            </Button>
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <DataGrid autoHeight density="headerHeight" rows={this.state.rows} columns={this.state.columns.map((column) => ({
+                                    ...column,
+                                    disableClickEventBubbling: true,
+                                }))} pageSize={5}
+                                          checkboxSelection
+                                          onRowSelected={(params) => {
+                                              let rs = this.state.rows;
+                                              rs[params.data.id].selected = params.isSelected;
+                                              this.setState({rows: rs});
+                                          }}/>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Grid container direction="row" justifyContent="flex-end" alignItems="center">
+                            <Grid item xs={12} style={{textAlign: "right"}}>
+                                <Link to="/">
+                                    <Button  variant="contained" color="primary" endIcon={<MapIcon />}>
+                                        Return to Map
+                                    </Button>
+                                </Link>
+                                &nbsp;
+                                <Link to="/">
+                                    <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData()}>
+                                        Save Pit Stops
+                                    </Button>
+                                </Link>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </div>
+
+                </Grid>
             </div>
         );
     }
