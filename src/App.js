@@ -34,7 +34,7 @@ export default function App() {
         </AppBar>
 
         <Switch>
-          <Grid container direction="row" justify="center" alignItems="center" className={'pageContainer'}>
+          <Grid container direction="row" justifyContent="center" alignItems="center" className={'pageContainer'}>
             <Route path="/" exact>
               <Grid item xs={8} className={'innerPage'}>
                 <Home />
