@@ -72,7 +72,7 @@ export default function Home() {
                         <Card>
                             <CardContent>
 
-                                <Grid justify="space-between" container>
+                                <Grid container direction="row" justifyContent="space-between" alignItems="center">
                                     <Grid item>
                                         <Typography variant={'h6'}>Upcoming Classes</Typography>
                                     </Grid>
@@ -94,7 +94,7 @@ export default function Home() {
                         <Card>
                             <CardContent>
 
-                                <Grid justify="space-between" container>
+                                <Grid container direction="row" justifyContent="space-between" alignItems="center">
                                     <Grid item>
                                         <Typography variant={'h6'}>Scheduled Pit Stops</Typography>
                                     </Grid>
