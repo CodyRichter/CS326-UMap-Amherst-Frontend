@@ -1,0 +1,57 @@
+.page
+{
+    font-family: "Helvetica";
+}
+
+.title
+{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.loginTitle
+{
+    text-align: center;
+    font-size: 30px;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.usernameField
+{
+    text-align: center;
+    margin-top: 30px;
+}
+
+.passwordField
+{
+    text-align: center;
+    margin-top: 30px;
+}
+
+.usernameIcon
+{
+    display: inline-flex;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+
+.passwordIcon
+{
+    display: inline-flex;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+
+.loginButton
+{
+    text-align: center;
+    margin-top: 30px;
+}
+
+.createAccount
+{
+    text-align: center;
+    margin-top: 30px;
+}

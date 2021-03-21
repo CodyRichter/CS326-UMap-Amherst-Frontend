@@ -51,7 +51,7 @@ export default function App() {
               </Grid>
             </Route>
             <Route path="/login">
-              <Grid item xs={8} className={'innerPage'}>
+              <Grid item xs={4} className={'innerPage'}>
                 <Login />
               </Grid>
             </Route>
