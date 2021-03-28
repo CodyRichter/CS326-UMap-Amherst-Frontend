@@ -70,3 +70,10 @@
   display: none;
   width: 130px;
 }
+
+/* Class Adding Error Info */
+.classes-add-error {
+  margin-top: 20px;
+  color: red;
+  display: none;
+}

@@ -7,31 +7,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 export default function Classes() {
-  // Array of class objects to load from backend
-  let list = [
-    {
-      name: "COMPSCI - 121",
-      days: "Monday, Wednesday",
-      building: "Thompson Hall",
-      time: "11:15 AM to 12:05 PM",
-      room: "104",
-    },
-    {
-      name: "COMPSCI - 220",
-      days: "Tuesday, Thursday",
-      building: "ILC",
-      time: "10:00 AM to 11:15 AM",
-      room: "N 151",
-    },
-    {
-      name: "COMPSCI - 311",
-      days: "Friday, Saturday, Sunday",
-      building: "Goessmann Lab",
-      time: "2:50 AM to 3:11 PM",
-      room: "20",
-    },
-  ];
-
   const classes = useStyles();
   const [state, setState] = useState({
     name: "",
@@ -225,6 +200,9 @@ export default function Classes() {
               onChange={handleChange}
             />
           </FormControl>
+          <div className="classes-add-error" id="classes-add-error">
+            Please make sure that all items have been selected.
+          </div>
         </div>
         <button
           className="classes-button"
@@ -236,15 +214,37 @@ export default function Classes() {
         <button className="classes-button" id="classes-save">
           Save Classes
         </button>
-        <button className="classes-button" id="classes-return">
-          Return to Map
-        </button>
+        <a href="#/">
+          <button className="classes-button" id="classes-return">
+            Return to Map
+          </button>
+        </a>
       </div>
     </div>
   );
 }
 
+/**
+ * Adds a class
+ * @param state - current component state
+ */
 function addClass(state) {
+  let validClass =
+    state.name !== "" &&
+    state.days !== "" &&
+    state.building !== "" &&
+    state.hour !== "" &&
+    state.minute !== "" &&
+    state.time !== "" &&
+    state.name !== "room";
+
+  if (!validClass) {
+    document.getElementById("classes-add-error").style.display = "block";
+    return state;
+  } else {
+    document.getElementById("classes-add-error").style.display = "none";
+  }
+
   let newClass = {
     name: state.name,
     days: state.days,
@@ -262,6 +262,11 @@ function addClass(state) {
   };
 }
 
+/**
+ * Removes a class
+ * @param state - current component state
+ * @param i - index in classList array to reomve
+ */
 function removeClass(state, i) {
   let newList = state.classList;
   newList.splice(i, 1);
@@ -283,6 +288,7 @@ function toggleAddMenu() {
     document.getElementById("classes-add").innerHTML = "Go Back";
     document.getElementById("classes-menu").style.display = "block";
     document.getElementById("classes-create").style.display = "block";
+    document.getElementById("classes-add-error").style.display = "none";
   } else {
     document.getElementById("classes-list").style.display = "block";
     document.getElementById("classes-save").style.display = "block";
