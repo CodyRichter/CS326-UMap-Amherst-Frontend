@@ -6,16 +6,6 @@ import InputBase from "@material-ui/core/InputBase";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 export default function Classes() {
   // Array of class objects to load from backend
   let list = [
@@ -43,7 +33,6 @@ export default function Classes() {
   ];
 
   const classes = useStyles();
-  const [classList, setClassList] = useState([]);
   const [state, setState] = useState({
     name: "",
     days: "",
@@ -52,6 +41,7 @@ export default function Classes() {
     minute: "",
     time: "",
     room: "001",
+    classList: [],
   });
   const handleChange = (event) => {
     const name = event.target.name;
@@ -63,19 +53,24 @@ export default function Classes() {
 
   let listDOM = []; // stores class list dom
   // Loading all of the classes
-  for (let i = 0; i < classList.length; i++) {
+  for (let i = 0; i < state.classList.length; i++) {
     let classDOM = (
       <div className="classes-list-item">
         <div>
-          {classList[i].name}{" "}
-          <span style={{ float: "right" }}>{classList[i].days}</span>
+          {state.classList[i].name}{" "}
+          <span style={{ float: "right" }}>{state.classList[i].days}</span>
         </div>
         <div>
-          {classList[i].building}{" "}
-          <span style={{ float: "right" }}>{classList[i].time}</span>
+          {state.classList[i].building}{" "}
+          <span style={{ float: "right" }}>{state.classList[i].time}</span>
         </div>
-        <div>Room {classList[i].room}</div>
-        <button className="classes-button">Remove</button>
+        <div>Room {state.classList[i].room}</div>
+        <button
+          className="classes-button"
+          onClick={() => setState(removeClass(state, i))}
+        >
+          Remove
+        </button>
       </div>
     );
     listDOM.push(classDOM);
@@ -234,17 +229,7 @@ export default function Classes() {
         <button
           className="classes-button"
           id="classes-create"
-          onClick={() =>
-            addClass(
-              state.name,
-              state.days,
-              state.building,
-              state.hour,
-              state.minute,
-              state.time,
-              state.room
-            )
-          }
+          onClick={() => setState(addClass(state))}
         >
           Add New Class
         </button>
@@ -259,8 +244,32 @@ export default function Classes() {
   );
 }
 
-function addClass(name, days, building, hour, minute, time, room) {
-  console.log(name + days + building + hour + minute + time + room);
+function addClass(state) {
+  let newClass = {
+    name: state.name,
+    days: state.days,
+    building: state.building,
+    time: state.hour + ":" + state.minute + " " + state.time,
+    room: state.room,
+  };
+  let newList = state.classList;
+  newList.push(newClass);
+  toggleAddMenu();
+
+  return {
+    ...state,
+    classList: newList,
+  };
+}
+
+function removeClass(state, i) {
+  let newList = state.classList;
+  newList.splice(i, 1);
+
+  return {
+    ...state,
+    classList: newList,
+  };
 }
 
 /**
@@ -283,6 +292,16 @@ function toggleAddMenu() {
     document.getElementById("classes-create").style.display = "none";
   }
 }
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
