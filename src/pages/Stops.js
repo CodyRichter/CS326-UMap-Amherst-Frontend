@@ -11,9 +11,16 @@ import SaveIcon from '@material-ui/icons/Save';
 import KeyboardTimePicker from '@material-ui/lab/DateTimePicker';
 import {CardContent, Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import SearchIcon from '@material-ui/icons/Search';
+import FilledInput from "@material-ui/core/FilledInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 
 export default class Stops extends React.Component {
+
+
 
     constructor(props) {
         super(props);
@@ -21,6 +28,7 @@ export default class Stops extends React.Component {
         this.getData();
 
         this.state = {
+            search:"",
             columns:
                 [
                 {
@@ -66,8 +74,11 @@ export default class Stops extends React.Component {
                 { id: 7, location: 'Campus Center', time: new Date(), selected: false},
                 { id: 8, location: 'W.E.B. Du Bois Library', time: new Date(), selected: false}
             ]
-        }
+        };
+        this.searchFilter = this.searchFilter.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
+
 
     getData() {
         // Once backend is hooked up
@@ -80,9 +91,28 @@ export default class Stops extends React.Component {
         // Send this.state.selected to it for database storage
     }
 
+    handleChange (event) {
+        this.setState({search:event.target.value});
+    };
+
+    searchFilter(row) {
+        let stringSearch = this.state.search.trim() === "" || row.location.toLowerCase().includes(this.state.search.toLowerCase());
+        let options = { weekday: 'long', hour: 'numeric', minute: 'numeric' };
+        let timeSearch = row.selected && row.time.toLocaleDateString("en-US", options).toLowerCase().includes(this.state.search.toLowerCase());
+        return stringSearch || timeSearch;
+    }
+
     render() {
+
+        const classes = makeStyles((theme) => ({
+            margin: {
+                margin: theme.spacing(1),
+            },
+        }));
+
         return (
             <div>
+
                 <Grid container direction="row" justifyContent="center" alignItems="center" spacing={3}>
 
                     <Grid item xs={12}>
@@ -90,9 +120,21 @@ export default class Stops extends React.Component {
                     </Grid>
 
                     <Grid item xs={12}>
+
                         <Card>
                             <CardContent>
-                                <DataGrid autoHeight density="headerHeight" rows={this.state.rows} columns={this.state.columns.map((column) => ({
+                                <div className={classes.margin}>
+                                    <Grid container spacing={1} alignItems="flex-end">
+
+                                        <Grid item>
+                                            <FormControl variant="filled">
+                                                <InputLabel htmlFor="component-filled">Search</InputLabel>
+                                                <FilledInput id="component-filled" value={this.state.search} onChange={this.handleChange} />
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                                <DataGrid autoHeight disableColumnFilter={true} density="headerHeight" rows={this.state.rows.filter(this.searchFilter)} columns={this.state.columns.map((column) => ({
                                     ...column,
                                     disableClickEventBubbling: true,
                                 }))} pageSize={5}
@@ -109,17 +151,15 @@ export default class Stops extends React.Component {
                     <Grid item xs={12}>
                         <Grid container direction="row" justifyContent="flex-end" alignItems="center">
                             <Grid item xs={12} style={{textAlign: "right"}}>
-                                <Link to="/">
+                                <Link to="/" style={{textDecoration:"none"}}>
                                     <Button variant="contained" endIcon={<MapIcon />}>
                                         Return to Map
                                     </Button>
                                 </Link>
                                 &nbsp;
-                                <Link to="/">
                                     <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData()}>
                                         Save Pit Stops
                                     </Button>
-                                </Link>
                             </Grid>
                         </Grid>
                     </Grid>
