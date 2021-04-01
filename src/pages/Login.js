@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
 
 
@@ -64,9 +65,12 @@ export default function Login()
               Create Account 
             </Button>
             <Dialog open = {open} className = "form">  
-              <DialogTitle> Create Account </DialogTitle>
+              <DialogTitle className = "formTitle"> Create Account </DialogTitle>
+                <Grid className = "contactIcon">
+                  <AccountBoxIcon style = {{fontSize: 45}}/>
+                </Grid>
               <DialogContent>
-                <DialogContentText>
+                <DialogContentText className = "formHeader">
                   Please fill in your first and last name, major, email address, and password.
                 </DialogContentText>
                   <TextField label = "First Name" variant = "outlined" margin = "dense" fullWidth/>

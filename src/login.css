@@ -65,3 +65,13 @@
 {
     background-color: lightgrey;
 }
+
+.formTitle, .formHeader
+{
+    text-align: center;
+}
+
+.contactIcon
+{
+    text-align: center;
+}
