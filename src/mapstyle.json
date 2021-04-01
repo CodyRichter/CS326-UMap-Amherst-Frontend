@@ -89,10 +89,7 @@
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#000000"
-      },
-      {
-        "saturation": 15
+        "color": "#C0C0C0"
       }
     ]
   }
