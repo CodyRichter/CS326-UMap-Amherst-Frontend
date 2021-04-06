@@ -211,7 +211,11 @@ export default function Classes() {
         >
           Add New Class
         </button>
-        <button className="classes-button" id="classes-save">
+        <button
+          className="classes-button"
+          id="classes-save"
+          onClick={() => save(state)}
+        >
           Save Classes
         </button>
         <a href="#/">
@@ -222,6 +226,25 @@ export default function Classes() {
       </div>
     </div>
   );
+}
+
+function save(state) {
+  fetch("https://cs326-umap-amherst.herokuapp.com/save", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      name: state.name,
+      days: state.days,
+      building: state.building,
+      hour: state.hour,
+      minute: state.minute,
+      time: state.time,
+      room: state.room,
+      classList: state.classList,
+    }),
+  });
 }
 
 /**
