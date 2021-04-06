@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
 
-
 export default function Login() 
 {
     const [open, isOpen] = useState(false);
@@ -26,6 +25,40 @@ export default function Login()
     {
       isOpen(false);
     }
+
+    const [field, setField] = useState
+    ({
+        firstName: "",
+        lastName: "",
+        major: "",
+        emailAddress: "",
+        password: ""
+    });
+
+    const isEmpty = (fieldValue) =>
+    {
+      if (fieldValue === "") 
+      {
+        return true;
+      }
+      else if (fieldValue !== "")
+      {
+        return false;
+      }
+    }
+
+    const handleChange = (event) =>
+    {
+      const fieldName = event.target.name;
+      const fieldValue = event.target.value;
+
+      setField
+      (
+        { 
+          [fieldName]: fieldValue
+        }
+      );
+    };
 
     return (
       <div className = "page">
@@ -71,13 +104,13 @@ export default function Login()
                 </Grid>
               <DialogContent>
                 <DialogContentText className = "formHeader">
-                  Please fill in your first and last name, major, email address, and password.
+                  Please fill in at least one field.
                 </DialogContentText>
-                  <TextField label = "First Name" variant = "outlined" margin = "dense" fullWidth/>
-                  <TextField label = "Last Name" variant = "outlined" margin = "dense" fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" fullWidth/>
+                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
