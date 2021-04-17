@@ -6,8 +6,9 @@ import InputBase from "@material-ui/core/InputBase";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-export default function Classes() {
+export default function Classes(props) {
   const classes = useStyles();
+
   const [state, setState] = useState({
     name: "",
     days: "",
@@ -17,6 +18,9 @@ export default function Classes() {
     time: "",
     room: "001",
     classList: [],
+    classSelectDOM: [],
+    buildingSelectDOM: [],
+    keyVal: 0,
   });
   const handleChange = (event) => {
     const name = event.target.name;
@@ -26,11 +30,34 @@ export default function Classes() {
     });
   };
 
+  // Loading all selectable class that are available to add
+  state.classSelectDOM = [];
+  let availableClasses = props.availableClasses.results;
+  for (let i = 0; i < availableClasses.length; i++) {
+    let selectClass = (
+      <MenuItem value={availableClasses[i].name} key={state.keyVal++}>
+        {availableClasses[i].name}
+      </MenuItem>
+    );
+    state.classSelectDOM.push(selectClass);
+  }
+  // Loading all selectable buildings that are available to add
+  state.buildingSelectDOM = [];
+  let availableBuildings = props.availableBuildings.results;
+  for (let i = 0; i < availableBuildings.length; i++) {
+    let selectBuilding = (
+      <MenuItem value={availableBuildings[i].name} key={state.keyVal++}>
+        {availableBuildings[i].name}
+      </MenuItem>
+    );
+    state.buildingSelectDOM.push(selectBuilding);
+  }
+
   let listDOM = []; // stores class list dom
   // Loading all of the classes
   for (let i = 0; i < state.classList.length; i++) {
     let classDOM = (
-      <div className="classes-list-item">
+      <div className="classes-list-item" key={state.keyVal++}>
         <div>
           {state.classList[i].name}{" "}
           <span style={{ float: "right" }}>{state.classList[i].days}</span>
@@ -86,9 +113,7 @@ export default function Classes() {
               name="name"
               onChange={handleChange}
             >
-              <MenuItem value="CS 121">CS 121</MenuItem>
-              <MenuItem value="CS 220">CS 220</MenuItem>
-              <MenuItem value="CS 311">CS 311</MenuItem>
+              {state.classSelectDOM}
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
@@ -123,9 +148,7 @@ export default function Classes() {
               name="building"
               onChange={handleChange}
             >
-              <MenuItem value="Thompson Hall">Thompson Hall</MenuItem>
-              <MenuItem value="ILC">ILC</MenuItem>
-              <MenuItem value="Goessmann">Goessmann</MenuItem>
+              {state.buildingSelectDOM}
             </Select>
           </FormControl>
           <br />
@@ -211,11 +234,7 @@ export default function Classes() {
         >
           Add New Class
         </button>
-        <button
-          className="classes-button"
-          id="classes-save"
-          onClick={() => save(state)}
-        >
+        <button className="classes-button" id="classes-save">
           Save Classes
         </button>
         <a href="#/">
@@ -226,25 +245,6 @@ export default function Classes() {
       </div>
     </div>
   );
-}
-
-function save(state) {
-  fetch("https://cs326-umap-amherst.herokuapp.com/save", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      name: state.name,
-      days: state.days,
-      building: state.building,
-      hour: state.hour,
-      minute: state.minute,
-      time: state.time,
-      room: state.room,
-      classList: state.classList,
-    }),
-  });
 }
 
 /**
@@ -259,7 +259,7 @@ function addClass(state) {
     state.hour !== "" &&
     state.minute !== "" &&
     state.time !== "" &&
-    state.name !== "room";
+    state.room !== "room";
 
   if (!validClass) {
     document.getElementById("classes-add-error").style.display = "block";
