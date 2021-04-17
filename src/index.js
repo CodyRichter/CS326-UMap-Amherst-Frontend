@@ -7,19 +7,25 @@ import "./login.css";
 
 async function fetchData() {
   // Loads available classes to select from SQL
-  let availableClasses = await fetch("http://localhost:5000/classes", {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-  }).then((res) => res.json());
+  let availableClasses = await fetch(
+    "https://cs326-umap-amherst.herokuapp.com/classes",
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  ).then((res) => res.json());
   // Loads available buildings to select from SQL
-  let availableBuildings = await fetch("http://localhost:5000/buildings", {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-  }).then((res) => res.json());
+  let availableBuildings = await fetch(
+    "https://cs326-umap-amherst.herokuapp.com//buildings",
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  ).then((res) => res.json());
 
   ReactDOM.render(
     <React.StrictMode>
