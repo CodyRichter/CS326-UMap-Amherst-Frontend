@@ -32,20 +32,28 @@ function classesPageComponent(availableClasses, availableBuildings) {
   );
 }
 
+function homePageComponent() {
+  return (
+      <Grid item xs={10} className={'innerPage'}>
+        <Home />
+      </Grid>
+  )
+}
+
 function stopsPageComponent() {
   return (
-    <Grid item xs={8} className={"innerPage"}>
-      <Stops />
-    </Grid>
-  );
+      <Grid item xs={8} className={'innerPage'}>
+        <Stops />
+      </Grid>
+  )
 }
 
 function loginPageComponent() {
   return (
-    <Grid item xs={4} className={"innerPage"}>
-      <Login />
-    </Grid>
-  );
+      <Grid item xs={4} className={'innerPage'}>
+        <Login />
+      </Grid>
+  )
 }
 
 export default function App(props) {
