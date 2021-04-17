@@ -18,7 +18,7 @@ async function fetchData() {
   ).then((res) => res.json());
   // Loads available buildings to select from SQL
   let availableBuildings = await fetch(
-    "https://cs326-umap-amherst.herokuapp.com//buildings",
+    "https://cs326-umap-amherst.herokuapp.com/buildings",
     {
       method: "GET",
       headers: {

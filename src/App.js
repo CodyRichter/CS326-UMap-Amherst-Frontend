@@ -6,7 +6,6 @@ import Stops from "./pages/Stops";
 import Login from "./pages/Login";
 import {
   AppBar,
-  Button,
   Grid,
   IconButton,
   Toolbar,
@@ -14,69 +13,77 @@ import {
 } from "@material-ui/core";
 import { Map as MapIcon } from "@material-ui/icons";
 
+function homePageComponent() {
+  return (
+    <Grid item xs={10} className={"innerPage"}>
+      <Home />
+    </Grid>
+  );
+}
+
+function classesPageComponent(availableClasses, availableBuildings) {
+  return (
+    <Grid item xs={8} className={"innerPage"}>
+      <Classes
+        availableClasses={availableClasses}
+        availableBuildings={availableBuildings}
+      />
+    </Grid>
+  );
+}
+
+function stopsPageComponent() {
+  return (
+    <Grid item xs={8} className={"innerPage"}>
+      <Stops />
+    </Grid>
+  );
+}
+
+function loginPageComponent() {
+  return (
+    <Grid item xs={4} className={"innerPage"}>
+      <Login />
+    </Grid>
+  );
+}
+
 export default function App(props) {
   return (
     <HashRouter basename={"/"}>
       <AppBar position="sticky">
         <Toolbar variant="dense">
-          <Link
-            to="/"
-            component={IconButton}
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <MapIcon />
+          <Link to="/" edge="start">
+            <IconButton>
+              <MapIcon />
+            </IconButton>
           </Link>
           <Typography variant="h6">UMap Amherst</Typography>
-          <Link to="/" component={Button} color={"inherit"}>
-            Home
-          </Link>
-          <Link to="/classes" component={Button} color={"inherit"}>
-            Classes
-          </Link>
-          <Link to="/stops" component={Button} color={"inherit"}>
-            Pitstops
-          </Link>
-          <Link to="/login" component={Button} color={"inherit"}>
-            Login
-          </Link>
         </Toolbar>
       </AppBar>
 
-      <Switch>
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          className={"pageContainer"}
-        >
-          <Route path="/" exact>
-            <Grid item xs={10} className={"innerPage"}>
-              <Home />
-            </Grid>
-          </Route>
-          <Route path="/classes">
-            <Grid item xs={8} className={"innerPage"}>
-              <Classes
-                availableClasses={props.availableClasses}
-                availableBuildings={props.availableBuildings}
-              />
-            </Grid>
-          </Route>
-          <Route path="/stops" exact>
-            <Grid item xs={8} className={"innerPage"}>
-              <Stops />
-            </Grid>
-          </Route>
-          <Route path="/login">
-            <Grid item xs={4} className={"innerPage"}>
-              <Login />
-            </Grid>
-          </Route>
-        </Grid>
-      </Switch>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        className={"pageContainer"}
+      >
+        <Switch>
+          <Route path="/" exact component={homePageComponent} />
+          <Route
+            path="/classes"
+            component={() =>
+              classesPageComponent(
+                props.availableClasses,
+                props.availableBuildings
+              )
+            }
+          />
+          <Route path="/stops" component={stopsPageComponent} />
+          <Route path="/login" component={loginPageComponent} />
+        </Switch>
+      </Grid>
     </HashRouter>
   );
 }

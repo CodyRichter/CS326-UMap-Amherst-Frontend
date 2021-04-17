@@ -31,6 +31,7 @@ export default function Classes(props) {
   };
 
   // Loading all selectable class that are available to add
+  state.classSelectDOM = [];
   let availableClasses = props.availableClasses.results;
   for (let i = 0; i < availableClasses.length; i++) {
     let selectClass = (
@@ -41,6 +42,7 @@ export default function Classes(props) {
     state.classSelectDOM.push(selectClass);
   }
   // Loading all selectable buildings that are available to add
+  state.buildingSelectDOM = [];
   let availableBuildings = props.availableBuildings.results;
   for (let i = 0; i < availableBuildings.length; i++) {
     let selectBuilding = (
