@@ -8,7 +8,7 @@ import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import MapIcon from "@material-ui/icons/Map";
 
-export default function Classes(props) {
+export default function Classes() {
   const classes = useStyles();
 
   useEffect(() => {
@@ -33,12 +33,76 @@ export default function Classes(props) {
           },
         }
       ).then((res) => res.json());
+      // Loads current classes from database
+      let currentClasses = await fetch(
+        "https://cs326-umap-amherst.herokuapp.com/userclasses?userID=" +
+          state.userID,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+
+      let classIDs = [];
+      currentClasses.results.map((obj) => classIDs.push(obj.class));
+
+      let classData = [];
+      for (let i = 0; i < classIDs.length; i++) {
+        let newClassData = await fetch(
+          "https://cs326-umap-amherst.herokuapp.com/classes?id=" + classIDs[i],
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        ).then((res) => res.json());
+
+        classData.push(newClassData.results[0]);
+      }
+
+      let buildingNames = [];
+      for (let i = 0; i < classData.length; i++) {
+        let newData = await fetch(
+          "https://cs326-umap-amherst.herokuapp.com/buildings?id=" +
+            classData[i].building,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        ).then((res) => res.json());
+        buildingNames.push(newData.results[0].name);
+      }
+
+      let newClassList = [];
+      for (let i = 0; i < classData.length; i++) {
+        let days = "";
+        if (classData[i].monday === true) days += "Mon ";
+        if (classData[i].tuesday === true) days += "Tues ";
+        if (classData[i].wednesday === true) days += "Wed ";
+        if (classData[i].thursday === true) days += "Thurs ";
+        if (classData[i].friday === true) days += "Fri ";
+        let newClass = {
+          name: classData[i].name,
+          room: classData[i].room,
+          time: classData[i].time,
+          building: buildingNames[i],
+          days: days,
+        };
+        newClassList.push(newClass);
+      }
 
       setState({
         ...state,
         loaded: true,
         availableClasses: availableClasses.results,
         availableBuildings: availableBuildings.results,
+        currentClasses: currentClasses.results,
+        classList: newClassList,
       });
     }
     if (state.loaded === false) {
@@ -59,8 +123,10 @@ export default function Classes(props) {
     buildingSelectDOM: [],
     availableClasses: [],
     availableBuildings: [],
+    currentClasses: [],
     keyVal: 0,
     loaded: false,
+    userID: 0,
   });
   const handleChange = (event) => {
     const name = event.target.name;
@@ -154,6 +220,12 @@ export default function Classes(props) {
           </button>
         </div>
         <div className="classes-list" id="classes-list">
+          <div className="classes-list-item">
+            <div style={{ textAlign: "center" }}>
+              User ID: {state.userID} &nbsp;&nbsp;&nbsp; Showing{" "}
+              {state.classList.length} Classes
+            </div>
+          </div>
           {listDOM}
         </div>
         <div className="classes-menu" id="classes-menu">
@@ -178,18 +250,14 @@ export default function Classes(props) {
               name="days"
               onChange={handleChange}
             >
-              <MenuItem value="Monday, Wednesday, Friday">
-                Monday, Wednesday, Friday
-              </MenuItem>
-              <MenuItem value="Monday, Wednesday">Monday, Wednesday</MenuItem>
-              <MenuItem value="Tuesday, Thursday">Tuesday, Thursday</MenuItem>
-              <MenuItem value="Monday">Monday</MenuItem>
-              <MenuItem value="Tuesday">Tuesday</MenuItem>
-              <MenuItem value="Wednesday">Wednesday</MenuItem>
-              <MenuItem value="Thursday">Thursday</MenuItem>
-              <MenuItem value="Friday">Friday</MenuItem>
-              <MenuItem value="Saturday">Saturday</MenuItem>
-              <MenuItem value="Sunday">Sunday</MenuItem>
+              <MenuItem value="Mon Wed Fri">Mon Wed Fri</MenuItem>
+              <MenuItem value="Mon Wed">Mon Wed</MenuItem>
+              <MenuItem value="Tues Thurs">Tues Thurs</MenuItem>
+              <MenuItem value="Mon">Mon</MenuItem>
+              <MenuItem value="Tues">Tues</MenuItem>
+              <MenuItem value="Wed">Wed</MenuItem>
+              <MenuItem value="Thurs">Thurs</MenuItem>
+              <MenuItem value="Fri">Fri</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
@@ -226,6 +294,18 @@ export default function Classes(props) {
               <MenuItem value="10">10</MenuItem>
               <MenuItem value="11">11</MenuItem>
               <MenuItem value="12">12</MenuItem>
+              <MenuItem value="13">13</MenuItem>
+              <MenuItem value="14">14</MenuItem>
+              <MenuItem value="15">15</MenuItem>
+              <MenuItem value="16">16</MenuItem>
+              <MenuItem value="17">17</MenuItem>
+              <MenuItem value="18">18</MenuItem>
+              <MenuItem value="19">19</MenuItem>
+              <MenuItem value="20">20</MenuItem>
+              <MenuItem value="21">21</MenuItem>
+              <MenuItem value="22">22</MenuItem>
+              <MenuItem value="23">23</MenuItem>
+              <MenuItem value="24">24</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
@@ -249,19 +329,6 @@ export default function Classes(props) {
               <MenuItem value="45">45</MenuItem>
               <MenuItem value="50">50</MenuItem>
               <MenuItem value="55">55</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">AM/PM</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="classes-menu-time"
-              value={state.time}
-              name="time"
-              onChange={handleChange}
-            >
-              <MenuItem value="AM">AM</MenuItem>
-              <MenuItem value="PM">PM</MenuItem>
             </Select>
           </FormControl>
           <br />
@@ -311,7 +378,6 @@ function addClass(state) {
     state.building !== "" &&
     state.hour !== "" &&
     state.minute !== "" &&
-    state.time !== "" &&
     state.room !== "room";
 
   if (!validClass) {
@@ -325,7 +391,7 @@ function addClass(state) {
     name: state.name,
     days: state.days,
     building: state.building,
-    time: state.hour + ":" + state.minute + " " + state.time,
+    time: state.hour + ":" + state.minute + ":00",
     room: state.room,
   };
   let newList = state.classList;
