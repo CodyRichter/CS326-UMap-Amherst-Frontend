@@ -11,6 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
+import axios from 'axios';
 
 export default function Login() 
 {
@@ -28,11 +29,13 @@ export default function Login()
 
     const [field, setField] = useState
     ({
+        id: "",
         firstName: "",
         lastName: "",
         major: "",
         emailAddress: "",
-        password: ""
+        password: "",
+        users: []
     });
 
     const isEmpty = (fieldValue) =>
@@ -60,6 +63,21 @@ export default function Login()
       );
     };
 
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+
+    const login = () => 
+    {
+      axios({
+        method: "POST",
+        data: {
+          username: loginUsername,
+          password: loginPassword,
+        },
+        url: "https://cs326-umap-amherst.herokuapp.com/saveusers",
+      }).then((res) => console.log(res));
+    };
+
     return (
       <div className = "page">
 
@@ -75,19 +93,19 @@ export default function Login()
             <Grid className = "usernameIcon">
               <PersonIcon/>
             </Grid>
-            <TextField label = "Username" variant = "outlined"/>
+            <TextField label = "Username" variant = "outlined" onChange = {event => setLoginUsername(event.target.value)}/>
           </div>
 
           <div className = "passwordField">
             <Grid className = "passwordIcon">
               <LockIcon/>
             </Grid>
-            <TextField label = "Password" variant = "outlined"/>
+            <TextField label = "Password" variant = "outlined" onChange = {event => setLoginPassword(event.target.value)}/>
           </div>
 
           <div className = "loginButton">
             <Link to = "/" className = "loginLink">
-              <Button variant = "contained">
+              <Button variant = "contained" onClick = {login}>
                 Login
               </Button>
             </Link>
@@ -116,7 +134,7 @@ export default function Login()
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {closeForm}>
+                <Button /*onClick = {() => setField(addLogin(field))}*/>
                   Sign Up
                 </Button>
               </DialogActions>
@@ -134,3 +152,37 @@ export default function Login()
       </div>
     );
 }
+/*
+function addLogin(state)
+{
+  let validLogin = state.id !== "" && state.firstName !== "" && state.lastName !== "" && state.major !== "" && state.emailAddress !== "" && state.password !== "";
+
+  if (validLogin === false)
+  {
+    console.log("Invalid login");
+  }
+  else if (validLogin === true)
+  {
+    console.log("Valid login");
+  }
+
+  let newUser = 
+  {
+    id: state.id,
+    firstName: state.firstName,
+    lastName: state.lastName,
+    major: state.major,
+    emailAddress: state.emailAddress,
+    password: state.password
+  };
+
+  let userList = state.users;
+
+  userList.push(newUser);
+
+  return {
+    ...state,
+    userList: newUser
+  };
+}
+*/
