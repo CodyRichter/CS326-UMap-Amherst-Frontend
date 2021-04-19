@@ -91,17 +91,6 @@ export default function Login()
 
     const signup = () =>
     {
-      let validSignup = firstName !== "" && lastName !== "" && major !== "" && emailAddress !== "" && password !== "";
-
-      if (validSignup === false)
-      {
-        console.log("Invalid signup");
-      }
-      else if (validSignup === true)
-      {
-        console.log("Valid signup");
-      }
-
       axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
       {
         firstName: firstName,
@@ -168,15 +157,15 @@ export default function Login()
                 </DialogContentText>
                   <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setFirstName(event.target.value)} fullWidth/>
                   <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setLastName(event.target.value)} fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)} fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setEmailAddress(event.target.value)} fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setPassword(event.target.value)} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)}  fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setEmailAddress(event.target.value)}  fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setPassword(event.target.value)}  fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {signup()}>
+                <Button onClick = {signup}>
                   Sign Up
                 </Button>
               </DialogActions>
