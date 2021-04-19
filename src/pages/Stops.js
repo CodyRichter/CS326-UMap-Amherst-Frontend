@@ -89,8 +89,8 @@ export default class Stops extends React.Component {
         // Once backend is hooked up
         // Retrieve user selected data and fill this.state.rows
 
-        let pitstops = await axios.get('http://localhost:5000/pitstops');
-        let selectedStops = await axios.get('http://localhost:5000/userpitstops',{params:{userID:0}});
+        let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
+        let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops',{params:{userID:0}});
 
         let data = pitstops.data;
         let selectedRows = selectedStops.data.results;
@@ -119,7 +119,7 @@ export default class Stops extends React.Component {
         // Once the backend is hooked up
         // Send this.state.selected to it for database storage
 
-        axios.post('http://localhost:5000/savepitstops', {
+        axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
             userID: 0,
             rows: this.state.rows.filter(a => {
                 return a["selected"] === true
