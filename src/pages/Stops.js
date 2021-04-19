@@ -12,11 +12,10 @@ import KeyboardTimePicker from '@material-ui/lab/DateTimePicker';
 import {CardContent, Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import SearchIcon from '@material-ui/icons/Search';
 import FilledInput from "@material-ui/core/FilledInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-
+import axios from 'axios'
 
 export default class Stops extends React.Component {
 
@@ -24,8 +23,6 @@ export default class Stops extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.getData();
 
         this.state = {
             search:"",
@@ -73,22 +70,68 @@ export default class Stops extends React.Component {
                 { id: 6, location: 'Roots Cafe', time: new Date(), selected: false},
                 { id: 7, location: 'Campus Center', time: new Date(), selected: false},
                 { id: 8, location: 'W.E.B. Du Bois Library', time: new Date(), selected: false}
-            ]
+            ],
+            selected: []
         };
         this.searchFilter = this.searchFilter.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.getData = this.getData.bind(this);
+        this.saveData = this.saveData.bind(this);
+
+    }
+
+    componentDidMount() {
+        this.getData();
     }
 
 
-    getData() {
+    getData = async () => {
         // Once backend is hooked up
         // Retrieve user selected data and fill this.state.rows
-    }
+
+        let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
+        let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops',{params:{userID:0}});
+
+        let data = pitstops.data;
+        let selectedRows = selectedStops.data.results;
+
+        let selectedRowIds = selectedStops.data.results.map(a => {
+            return a["stopid"];
+        });
+        let newRows = data.results.map(a => {
+            a["time"] = new Date();
+            a["selected"] = selectedRows.filter(b => {
+                return b["stopid"] === a["id"];
+            }).length !== 0;
+            if (a["selected"] === true) {
+                a["time"] = new Date(selectedRows.filter(b => {
+                    return b["stopid"] === a["id"];
+                })[0]["stoptime"]);
+            }
+            return a;
+        });
+        this.setState({rows: newRows, selected: selectedRowIds});
+
+    };
 
 
     saveData() {
         // Once the backend is hooked up
         // Send this.state.selected to it for database storage
+
+        axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
+            userID: 0,
+            rows: this.state.rows.filter(a => {
+                return a["selected"] === true
+            })
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
     }
 
     handleChange (event) {
@@ -102,7 +145,11 @@ export default class Stops extends React.Component {
         return stringSearch || timeSearch;
     }
 
+
+
     render() {
+
+
 
         const classes = makeStyles((theme) => ({
             margin: {
@@ -139,11 +186,14 @@ export default class Stops extends React.Component {
                                     disableClickEventBubbling: true,
                                 }))} pageSize={5}
                                           checkboxSelection
+                                          selectionModel={this.state.selected}
                                           onRowSelected={(params) => {
                                               let rs = this.state.rows;
                                               rs[params.data.id].selected = params.isSelected;
                                               this.setState({rows: rs});
-                                          }}/>
+                                          }}
+
+                                />
                             </CardContent>
                         </Card>
                     </Grid>
@@ -156,8 +206,8 @@ export default class Stops extends React.Component {
                                         Return to Map
                                     </Button>
                                 </Link>
-                                &nbsp;
-                                    <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData()}>
+
+                                    <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData}>
                                         Save Pit Stops
                                     </Button>
                             </Grid>

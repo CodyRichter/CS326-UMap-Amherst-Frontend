@@ -11,6 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
+import axios from 'axios';
 
 export default function Login() 
 {
@@ -28,11 +29,13 @@ export default function Login()
 
     const [field, setField] = useState
     ({
+        id: "",
         firstName: "",
         lastName: "",
         major: "",
         emailAddress: "",
-        password: ""
+        password: "",
+        users: []
     });
 
     const isEmpty = (fieldValue) =>
@@ -60,6 +63,63 @@ export default function Login()
       );
     };
 
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+
+    const login = () => 
+    {
+      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      {
+        username: loginUsername,
+        password: loginPassword
+      })
+      .then(function (response) 
+      {
+        console.log(response);
+      })
+      .catch(function (error) 
+      {
+        console.log(error);
+      });
+    };
+
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [major, setMajor] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
+    const [password, setPassword] = useState("");
+
+    const signup = () =>
+    {
+      let validSignup = firstName !== "" && lastName !== "" && major !== "" && emailAddress !== "" && password !== "";
+
+      if (validSignup === false)
+      {
+        console.log("Invalid signup");
+      }
+      else if (validSignup === true)
+      {
+        console.log("Valid signup");
+      }
+
+      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      {
+        firstName: firstName,
+        lastName: lastName,
+        major: major,
+        emailAddress: emailAddress,
+        password: password
+      })
+      .then(function (response) 
+      {
+        console.log(response);
+      })
+      .catch(function (error) 
+      {
+        console.log(error);
+      });
+    };
+
     return (
       <div className = "page">
 
@@ -75,19 +135,19 @@ export default function Login()
             <Grid className = "usernameIcon">
               <PersonIcon/>
             </Grid>
-            <TextField label = "Username" variant = "outlined"/>
+            <TextField label = "Username" variant = "outlined" onChange = {event => setLoginUsername(event.target.value)}/>
           </div>
 
           <div className = "passwordField">
             <Grid className = "passwordIcon">
               <LockIcon/>
             </Grid>
-            <TextField label = "Password" variant = "outlined"/>
+            <TextField label = "Password" variant = "outlined" onChange = {event => setLoginPassword(event.target.value)}/>
           </div>
 
           <div className = "loginButton">
             <Link to = "/" className = "loginLink">
-              <Button variant = "contained">
+              <Button variant = "contained" onClick = {login}>
                 Login
               </Button>
             </Link>
@@ -106,17 +166,17 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in at least one field.
                 </DialogContentText>
-                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setFirstName(event.target.value)} fullWidth/>
+                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setLastName(event.target.value)} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)} fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setEmailAddress(event.target.value)} fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setPassword(event.target.value)} fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {closeForm}>
+                <Button onClick = {signup()}>
                   Sign Up
                 </Button>
               </DialogActions>
