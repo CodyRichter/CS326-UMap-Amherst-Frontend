@@ -68,7 +68,7 @@ export default function Login()
 
     const login = () => 
     {
-      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      axios.post('https://cs326-umap-amherst.herokuapp.com/savelogin', 
       {
         username: loginUsername,
         password: loginPassword
@@ -91,7 +91,7 @@ export default function Login()
 
     const signup = () =>
     {
-      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      axios.post('https://cs326-umap-amherst.herokuapp.com/savesignup', 
       {
         firstName: firstName,
         lastName: lastName,
