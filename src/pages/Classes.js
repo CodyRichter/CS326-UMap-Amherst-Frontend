@@ -15,7 +15,7 @@ export default function Classes(props) {
     async function fetchData() {
       // Loads available classes to select from SQL
       let availableClasses = await fetch(
-        "https://cs326-umap-amherst.herokuapp.com/classes",
+        "https://cs326-umap-amherst.herokuapp.com/classOptions",
         {
           method: "GET",
           headers: {
