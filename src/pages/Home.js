@@ -1,238 +1,46 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {CardContent, Grid, Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import {Edit, Person} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import MapComponent from "../components/MapComponent";
 import {Link} from "react-router-dom";
+import axios from 'axios';
 
 
 export default function Home() {
 
     let [upcomingClasses, setUpcomingClasses] = useState([
         {
-            name: 'Compsci 121',
-            startTime: '11:15 AM',
-            endTime: '12:05 PM',
-            location: 'ILC 151'
-        },
-        {
-            name: 'History 115',
-            startTime: '12:20 PM',
-            endTime: '1:10 PM',
-            location: 'Herter 212'
+            classname: 'Compsci 121',
+            time: '11:15 AM',
+            buildingname: 'ILC',
+            room: 'N151',
         }
     ]);
 
     let [pitstops, setPitstops] = useState([
         {
-            name: 'Lunch at Blue Wall',
-            startTime: '1:30 PM',
-            endTime: '2:30 PM',
-            location: 'ILC 151'
-        },
-        {
-            name: 'Study at Library',
-            startTime: '4:00 PM',
-            endTime: '6:00 PM',
-            location: 'W.E.B. Du Bois Library'
+            time: '12:05PM',
+            location: 'Blue Wall'
         }
     ]);
 
-    function showDirectionsOnMap() {
+    let [timeUntilNextClass, setTimeUntilNextClass] = useState('No more classes today.');
 
-        // let startPos = [42.387781, -72.527347];  // Herter hall
-        // let endPos = [42.391327, -72.526965];  // Campus center
+    let [route, setRoute] = useState(null);
 
-        // TODO: Make call to server and get directions
-
-        // This is what the API will normally return
-        let api_call_result = {
-            "geocoded_waypoints": [
-                {
-                    "geocoder_status": "OK",
-                    "place_id": "ChIJ3-y273PS5okRyNNBnId51eU",
-                    "types": [
-                        "premise"
-                    ]
-                },
-                {
-                    "geocoder_status": "OK",
-                    "place_id": "ChIJqbpXyHDS5okRz_S73SlN3Vg",
-                    "types": [
-                        "premise"
-                    ]
-                }
-            ],
-            "routes": [
-                {
-                    "bounds": {
-                        "northeast": {
-                            "lat": 42.3925702,
-                            "lng": -72.52233369999999
-                        },
-                        "southwest": {
-                            "lat": 42.3852591,
-                            "lng": -72.5270293
-                        }
-                    },
-                    "copyrights": "Map data ©2021",
-                    "legs": [
-                        {
-                            "distance": {
-                                "text": "1.0 mi",
-                                "value": 1582
-                            },
-                            "duration": {
-                                "text": "5 mins",
-                                "value": 273
-                            },
-                            "end_address": "Murray D. Lincoln Campus Center, 1 Campus Center Way, Amherst, MA 01003, USA",
-                            "end_location": {
-                                "lat": 42.391686,
-                                "lng": -72.52609099999999
-                            },
-                            "start_address": "Herter Hall, Amherst, MA 01002, USA",
-                            "start_location": {
-                                "lat": 42.3878658,
-                                "lng": -72.5270293
-                            },
-                            "steps": [
-                                {
-                                    "distance": {
-                                        "text": "397 ft",
-                                        "value": 121
-                                    },
-                                    "duration": {
-                                        "text": "1 min",
-                                        "value": 23
-                                    },
-                                    "end_location": {
-                                        "lat": 42.3870385,
-                                        "lng": -72.52641
-                                    },
-                                    "html_instructions": "Head <b>south</b> toward <b>Presidents Dr</b>",
-                                    "polyline": {
-                                        "points": "e{uaG|ltyLd@Q~Ai@VIBADAB?CWAY"
-                                    },
-                                    "start_location": {
-                                        "lat": 42.3878658,
-                                        "lng": -72.5270293
-                                    },
-                                    "travel_mode": "DRIVING"
-                                },
-                                {
-                                    "distance": {
-                                        "text": "0.1 mi",
-                                        "value": 179
-                                    },
-                                    "duration": {
-                                        "text": "1 min",
-                                        "value": 76
-                                    },
-                                    "end_location": {
-                                        "lat": 42.3854799,
-                                        "lng": -72.5258504
-                                    },
-                                    "html_instructions": "Turn <b>right</b> onto <b>Presidents Dr</b>",
-                                    "maneuver": "turn-right",
-                                    "polyline": {
-                                        "points": "_vuaG`ityLD?lA]XGbAUl@QnA]FC"
-                                    },
-                                    "start_location": {
-                                        "lat": 42.3870385,
-                                        "lng": -72.52641
-                                    },
-                                    "travel_mode": "DRIVING"
-                                },
-                                {
-                                    "distance": {
-                                        "text": "0.2 mi",
-                                        "value": 292
-                                    },
-                                    "duration": {
-                                        "text": "1 min",
-                                        "value": 40
-                                    },
-                                    "end_location": {
-                                        "lat": 42.3858297,
-                                        "lng": -72.52262829999999
-                                    },
-                                    "html_instructions": "Turn <b>left</b> onto <b>Massachusetts Ave</b>",
-                                    "maneuver": "turn-left",
-                                    "polyline": {
-                                        "points": "gluaGpetyLj@Sa@wCCOS}AIm@OoACQEYGa@G]CQ?CASAS?Q?Q@G?G@M"
-                                    },
-                                    "start_location": {
-                                        "lat": 42.3854799,
-                                        "lng": -72.5258504
-                                    },
-                                    "travel_mode": "DRIVING"
-                                },
-                                {
-                                    "distance": {
-                                        "text": "0.5 mi",
-                                        "value": 841
-                                    },
-                                    "duration": {
-                                        "text": "1 min",
-                                        "value": 79
-                                    },
-                                    "end_location": {
-                                        "lat": 42.3925702,
-                                        "lng": -72.5256119
-                                    },
-                                    "html_instructions": "Turn <b>left</b> onto <b>N Pleasant St</b>",
-                                    "maneuver": "turn-left",
-                                    "polyline": {
-                                        "points": "mnuaGlqsyL@IBK@E[IQCw@OQAI?C?G?KBMFA?KFQPa@d@a@f@IJKPSZ}@tAA@KPKPCB]^URIHm@`@GDSJ[NoAb@[LmA^A?EBQDE@u@L_D\\eALK@C?cCZMBqAVk@L"
-                                    },
-                                    "start_location": {
-                                        "lat": 42.3858297,
-                                        "lng": -72.52262829999999
-                                    },
-                                    "travel_mode": "DRIVING"
-                                },
-                                {
-                                    "distance": {
-                                        "text": "489 ft",
-                                        "value": 149
-                                    },
-                                    "duration": {
-                                        "text": "1 min",
-                                        "value": 55
-                                    },
-                                    "end_location": {
-                                        "lat": 42.391686,
-                                        "lng": -72.52609099999999
-                                    },
-                                    "html_instructions": "Turn <b>left</b><div style=\"font-size:0.9em\">Destination will be on the right</div>",
-                                    "maneuver": "turn-left",
-                                    "polyline": {
-                                        "points": "qxvaG`dtyLPbBJp@FAFADCDEDCFEFCFADABA@?JCHAHALALAB?BABABC"
-                                    },
-                                    "start_location": {
-                                        "lat": 42.3925702,
-                                        "lng": -72.5256119
-                                    },
-                                    "travel_mode": "DRIVING"
-                                }
-                            ],
-                            "traffic_speed_entry": [],
-                            "via_waypoint": []
-                        }
-                    ],
-                    "overview_polyline": {
-                        "points": "e{uaG|ltyL`DgAHAEq@pD{@|Bo@r@WcAsHa@}CMgA?_AFk@@E[IiASg@AYJMF_BjB_BdCWb@a@b@_@\\u@f@o@ZkBp@gBh@{@NeFj@aD`@}Bd@\\tCZM\\OVGz@KBC"
-                    },
-                    "summary": "N Pleasant St",
-                    "warnings": [],
-                    "waypoint_order": []
-                }
-            ],
-            "status": "OK"
-        }
-    }
+    useEffect(() => {
+        axios.request({
+            method: 'get',
+            url: 'http://cs326-umap-amherst.herokuapp.com/home?userID=0'
+        }).then((res) => {
+            setUpcomingClasses(res.data['classes']);
+            setPitstops(res.data['stops']);
+            setTimeUntilNextClass(res.data['timeUntilNextClass']);
+            setRoute(res.data['route']);
+        });
+    }, [])
 
     return (
         <Grid container spacing={3}>
@@ -278,8 +86,11 @@ export default function Home() {
                                         </Link>
                                     </Grid>
                                 </Grid>
+                                {upcomingClasses.length === 0 &&
+                                    <Typography variant={'body1'}>No more classes today.</Typography>
+                                }
                                 {upcomingClasses.map((classInfo, idx) =>
-                                    <Typography key={idx} variant={'body1'}>{classInfo.name} {classInfo.startTime}</Typography>
+                                    <Typography key={idx} variant={'body1'}>{classInfo.classname}: {classInfo.buildingname} {classInfo.room}  <b>{classInfo.time}</b></Typography>
                                 )}
                             </CardContent>
                         </Card>
@@ -302,8 +113,11 @@ export default function Home() {
                                         </Link>
                                     </Grid>
                                 </Grid>
+                                {pitstops.length === 0 &&
+                                <Typography variant={'body1'}>No more pitstops today.</Typography>
+                                }
                                 {pitstops.map((stop, idx) =>
-                                    <Typography key={idx} variant={'body1'}>{stop.name} {stop.startTime}</Typography>
+                                    <Typography key={idx} variant={'body1'}>{stop.location}  <b>{stop.time}</b></Typography>
                                 )}
                             </CardContent>
                         </Card>
@@ -314,12 +128,7 @@ export default function Home() {
                         <Card>
                             <CardContent>
                                 <Typography variant={'h6'}>Time Until Next Class</Typography>
-                                <Typography variant={'body1'}>10 Minutes</Typography>
-
-                                <br />
-
-                                <Typography variant={'h6'}>Travel Time to Next Class</Typography>
-                                <Typography variant={'body1'}>6 Minutes</Typography>
+                                <Typography variant={'body1'}>{timeUntilNextClass}</Typography>
 
                             </CardContent>
                         </Card>
@@ -331,7 +140,7 @@ export default function Home() {
 
             {/*Map*/}
             <Grid item xs={8} className={'mapContainer'}>
-                <MapComponent />
+                <MapComponent route={route} />
             </Grid>
 
         </Grid>
