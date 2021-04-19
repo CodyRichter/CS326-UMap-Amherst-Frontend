@@ -155,11 +155,11 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in at least one field.
                 </DialogContentText>
-                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => {setFirstName(event.target.value); handleChange;}} fullWidth/>
-                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => {setLastName(event.target.value); handleChange;}}fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => {setMajor(event.target.value); handleChange;}} fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => {setEmailAddress(event.target.value); handleChange;}} fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => {setPassword(event.target.value); handleChange;}}fullWidth/>
+                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setFirstName(event.target.value)} fullWidth/>
+                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setLastName(event.target.value)} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)}  fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setEmailAddress(event.target.value)}  fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setPassword(event.target.value)}  fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
