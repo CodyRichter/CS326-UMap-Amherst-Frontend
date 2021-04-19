@@ -39,6 +39,8 @@ export default function Home() {
             setPitstops(res.data['stops']);
             setTimeUntilNextClass(res.data['timeUntilNextClass']);
             setRoute(res.data['route']);
+        }).catch((err) => {
+            console.log('Unable to connect to backend to load data.')
         });
     }, [])
 
