@@ -16,10 +16,7 @@ import { Map as MapIcon } from "@material-ui/icons";
 function classesPageComponent(availableClasses, availableBuildings) {
   return (
     <Grid item xs={8} className={"innerPage"}>
-      <Classes
-        availableClasses={availableClasses}
-        availableBuildings={availableBuildings}
-      />
+      <Classes />
     </Grid>
   );
 }
@@ -48,7 +45,7 @@ function loginPageComponent() {
   );
 }
 
-export default function App(props) {
+export default function App() {
   return (
     <HashRouter basename={"/"}>
       <AppBar position="sticky">
@@ -71,15 +68,7 @@ export default function App(props) {
       >
         <Switch>
           <Route path="/" exact component={homePageComponent} />
-          <Route
-            path="/classes"
-            component={() =>
-              classesPageComponent(
-                props.availableClasses,
-                props.availableBuildings
-              )
-            }
-          />
+          <Route path="/classes" component={classesPageComponent()} />
           <Route path="/stops" component={stopsPageComponent} />
           <Route path="/login" component={loginPageComponent} />
         </Switch>
