@@ -41,8 +41,9 @@ export default function Classes(props) {
         availableBuildings: availableBuildings.results,
       });
     }
-
-    fetchData();
+    if (state.loaded === false) {
+      fetchData();
+    }
   });
 
   const [state, setState] = useState({
