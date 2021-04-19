@@ -22,8 +22,7 @@ export default function MapComponent(props) {
     }
 
     function handleLoadGoogleMapsAPI() {
-        if (map && maps) {
-            console.log(props.route);
+        if (map && maps && props.route) {
 
             if (!props.route) {
                 return;
