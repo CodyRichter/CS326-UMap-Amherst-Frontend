@@ -74,8 +74,9 @@ export default function Login()
           username: loginUsername,
           password: loginPassword,
         },
+        withCredentials: true,
         url: "https://cs326-umap-amherst.herokuapp.com/saveusers",
-      }).then((res) => console.log(res));
+      }).then((response) => console.log(response));
     };
 
     return (
@@ -134,7 +135,7 @@ export default function Login()
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button /*onClick = {() => setField(addLogin(field))}*/>
+                <Button onClick = {() => setField(addLogin(field))}>
                   Sign Up
                 </Button>
               </DialogActions>
@@ -152,7 +153,7 @@ export default function Login()
       </div>
     );
 }
-/*
+
 function addLogin(state)
 {
   let validLogin = state.id !== "" && state.firstName !== "" && state.lastName !== "" && state.major !== "" && state.emailAddress !== "" && state.password !== "";
@@ -185,4 +186,3 @@ function addLogin(state)
     userList: newUser
   };
 }
-*/
