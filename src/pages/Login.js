@@ -68,15 +68,19 @@ export default function Login()
 
     const login = () => 
     {
-      axios({
-        method: "POST",
-        data: {
-          username: loginUsername,
-          password: loginPassword,
-        },
-        withCredentials: true,
-        url: "https://cs326-umap-amherst.herokuapp.com/saveusers",
-      }).then((response) => console.log(response));
+      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      {
+        firstName: loginUsername,
+        lastName: loginPassword
+      })
+      .then(function (response) 
+      {
+        console.log(response);
+      })
+      .catch(function (error) 
+      {
+        console.log(error);
+      });
     };
 
     return (
