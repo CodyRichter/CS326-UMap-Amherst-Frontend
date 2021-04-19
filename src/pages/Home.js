@@ -33,7 +33,7 @@ export default function Home() {
     useEffect(() => {
         axios.request({
             method: 'get',
-            url: 'http://cs326-umap-amherst.herokuapp.com/home?userID=0'
+            url: 'https://cs326-umap-amherst.herokuapp.com/home?userID=0'
         }).then((res) => {
             setUpcomingClasses(res.data['classes']);
             setPitstops(res.data['stops']);
