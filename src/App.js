@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { Map as MapIcon } from "@material-ui/icons";
 
-function classesPageComponent(availableClasses, availableBuildings) {
+function classesPageComponent() {
   return (
     <Grid item xs={8} className={"innerPage"}>
       <Classes />
@@ -68,7 +68,7 @@ export default function App() {
       >
         <Switch>
           <Route path="/" exact component={homePageComponent} />
-          <Route path="/classes" component={classesPageComponent()} />
+          <Route path="/classes" component={classesPageComponent} />
           <Route path="/stops" component={stopsPageComponent} />
           <Route path="/login" component={loginPageComponent} />
         </Switch>
