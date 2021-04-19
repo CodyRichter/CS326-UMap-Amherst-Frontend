@@ -1,13 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputBase from "@material-ui/core/InputBase";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Button from "@material-ui/core/Button";
+import MapIcon from "@material-ui/icons/Map";
 
 export default function Classes(props) {
   const classes = useStyles();
+
+  useEffect(() => {
+    async function fetchData() {
+      // Loads available classes to select from SQL
+      let availableClasses = await fetch(
+        "https://cs326-umap-amherst.herokuapp.com/classes",
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+      // Loads available buildings to select from SQL
+      let availableBuildings = await fetch(
+        "https://cs326-umap-amherst.herokuapp.com/buildings",
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+
+      setState({
+        ...state,
+        loaded: true,
+        availableClasses: availableClasses.results,
+        availableBuildings: availableBuildings.results,
+      });
+    }
+
+    fetchData();
+  });
 
   const [state, setState] = useState({
     name: "",
@@ -20,7 +56,10 @@ export default function Classes(props) {
     classList: [],
     classSelectDOM: [],
     buildingSelectDOM: [],
+    availableClasses: [],
+    availableBuildings: [],
     keyVal: 0,
+    loaded: false,
   });
   const handleChange = (event) => {
     const name = event.target.name;
@@ -32,22 +71,20 @@ export default function Classes(props) {
 
   // Loading all selectable class that are available to add
   state.classSelectDOM = [];
-  let availableClasses = props.availableClasses.results;
-  for (let i = 0; i < availableClasses.length; i++) {
+  for (let i = 0; i < state.availableClasses.length; i++) {
     let selectClass = (
-      <MenuItem value={availableClasses[i].name} key={state.keyVal++}>
-        {availableClasses[i].name}
+      <MenuItem value={state.availableClasses[i].name} key={state.keyVal++}>
+        {state.availableClasses[i].name}
       </MenuItem>
     );
     state.classSelectDOM.push(selectClass);
   }
   // Loading all selectable buildings that are available to add
   state.buildingSelectDOM = [];
-  let availableBuildings = props.availableBuildings.results;
-  for (let i = 0; i < availableBuildings.length; i++) {
+  for (let i = 0; i < state.availableBuildings.length; i++) {
     let selectBuilding = (
-      <MenuItem value={availableBuildings[i].name} key={state.keyVal++}>
-        {availableBuildings[i].name}
+      <MenuItem value={state.availableBuildings[i].name} key={state.keyVal++}>
+        {state.availableBuildings[i].name}
       </MenuItem>
     );
     state.buildingSelectDOM.push(selectBuilding);
@@ -83,6 +120,21 @@ export default function Classes(props) {
     listDOM = (
       <div className="classes-list-item">
         <div>No classes scheduled :(</div>
+      </div>
+    );
+  }
+
+  if (state.loaded === false) {
+    return (
+      <div>
+        <div className="classes-dashboard">
+          <span className="classes-title">Class Schedule</span>
+          <div className="classes-list" id="classes-list">
+            <div className="classes-list-item">
+              <div>LOADING DATA...</div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -234,13 +286,13 @@ export default function Classes(props) {
         >
           Add New Class
         </button>
-        <button className="classes-button" id="classes-save">
+        <Button variant="contained" endIcon={<MapIcon />} id="classes-save">
           Save Classes
-        </button>
+        </Button>
         <a href="#/">
-          <button className="classes-button" id="classes-return">
+          <Button variant="contained" endIcon={<MapIcon />} id="classes-return">
             Return to Map
-          </button>
+          </Button>
         </a>
       </div>
     </div>
@@ -314,8 +366,8 @@ function toggleAddMenu() {
     document.getElementById("classes-add-error").style.display = "none";
   } else {
     document.getElementById("classes-list").style.display = "block";
-    document.getElementById("classes-save").style.display = "block";
-    document.getElementById("classes-return").style.display = "block";
+    document.getElementById("classes-save").style.display = "flex";
+    document.getElementById("classes-return").style.display = "flex";
     document.getElementById("classes-menu").style.display = "none";
     document.getElementById("classes-add").innerHTML = "Add Class";
     document.getElementById("classes-create").style.display = "none";
