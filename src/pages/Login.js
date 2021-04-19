@@ -70,8 +70,45 @@ export default function Login()
     {
       axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
       {
-        firstName: loginUsername,
-        lastName: loginPassword
+        username: loginUsername,
+        password: loginPassword
+      })
+      .then(function (response) 
+      {
+        console.log(response);
+      })
+      .catch(function (error) 
+      {
+        console.log(error);
+      });
+    };
+
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [major, setMajor] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
+    const [password, setPassword] = useState("");
+
+    const signup = () =>
+    {
+      let validSignup = firstName !== "" && lastName !== "" && major !== "" && emailAddress !== "" && password !== "";
+
+      if (validSignup === false)
+      {
+        console.log("Invalid signup");
+      }
+      else if (validSignup === true)
+      {
+        console.log("Valid signup");
+      }
+
+      axios.post('https://cs326-umap-amherst.herokuapp.com/saveusers', 
+      {
+        firstName: firstName,
+        lastName: lastName,
+        major: major,
+        emailAddress: emailAddress,
+        password: password
       })
       .then(function (response) 
       {
@@ -129,17 +166,17 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in at least one field.
                 </DialogContentText>
-                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {handleChange} fullWidth/>
+                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setFirstName(event.target.value)} fullWidth/>
+                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setLastName(event.target.value)} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)} fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setEmailAddress(event.target.value)} fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setPassword(event.target.value)} fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {() => setField(addLogin(field))}>
+                <Button onClick = {signup()}>
                   Sign Up
                 </Button>
               </DialogActions>
@@ -156,37 +193,4 @@ export default function Login()
 
       </div>
     );
-}
-
-function addLogin(state)
-{
-  let validLogin = state.id !== "" && state.firstName !== "" && state.lastName !== "" && state.major !== "" && state.emailAddress !== "" && state.password !== "";
-
-  if (validLogin === false)
-  {
-    console.log("Invalid login");
-  }
-  else if (validLogin === true)
-  {
-    console.log("Valid login");
-  }
-
-  let newUser = 
-  {
-    id: state.id,
-    firstName: state.firstName,
-    lastName: state.lastName,
-    major: state.major,
-    emailAddress: state.emailAddress,
-    password: state.password
-  };
-
-  let userList = state.users;
-
-  userList.push(newUser);
-
-  return {
-    ...state,
-    userList: newUser
-  };
 }
