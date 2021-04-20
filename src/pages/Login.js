@@ -83,6 +83,7 @@ export default function Login()
       });
     };
 
+    const [id, setId] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [major, setMajor] = useState("");
@@ -93,6 +94,7 @@ export default function Login()
     {
       axios.post('https://cs326-umap-amherst.herokuapp.com/savesignup', 
       {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         major: major,
