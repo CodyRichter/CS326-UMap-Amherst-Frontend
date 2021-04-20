@@ -83,6 +83,7 @@ export default function Login()
       });
     };
 
+    const [id, setId] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [major, setMajor] = useState("");
@@ -93,6 +94,7 @@ export default function Login()
     {
       axios.post('https://cs326-umap-amherst.herokuapp.com/savesignup', 
       {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         major: major,
@@ -155,6 +157,7 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in at least one field.
                 </DialogContentText>
+                  <TextField label = "ID" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setId(event.target.value)} fullWidth/>
                   <TextField label = "First Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setFirstName(event.target.value)} fullWidth/>
                   <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setLastName(event.target.value)} fullWidth/>
                   <TextField label = "Major" variant = "outlined" margin = "dense" error = {isEmpty(Object.values(field)[0])} onChange = {event => setMajor(event.target.value)}  fullWidth/>
