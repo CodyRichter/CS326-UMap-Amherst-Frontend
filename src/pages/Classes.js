@@ -187,6 +187,12 @@ export default function Classes() {
     listDOM = (
       <div className="classes-list-item">
         <div>No classes scheduled :(</div>
+        <br />
+        <br />
+        <div>Try refreshing the page? Or add class through the add button!</div>
+          <Button variant="contained" endIcon={<MapIcon />} id="classes-return" onClick={()=>setState({...state, loaded:false})}>
+            Refresh
+          </Button>
       </div>
     );
   }
@@ -354,7 +360,7 @@ export default function Classes() {
         >
           Add New Class
         </button>
-        <Button variant="contained" endIcon={<MapIcon />} id="classes-save">
+        <Button variant="contained" endIcon={<MapIcon />} id="classes-save" onClick={() => save(state, setState)}>
           Save Classes
         </Button>
         <a href="#/">
@@ -365,6 +371,39 @@ export default function Classes() {
       </div>
     </div>
   );
+}
+
+function save(state, setState) {
+  let newList = state.classList;
+  async function update() {
+    for (let i=0; i < newList.length; i++) {
+      let ids = await fetch(
+      "https://cs326-umap-amherst.herokuapp.com/buildings?name='"+newList[i].building+"'",
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+      ).then((res) => res.json());
+      newList[i].building = ids.results[0].id;
+    }
+    console.log(newList);
+    fetch(
+      "https://cs326-umap-amherst.herokuapp.com/saveclasses",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({userID: state.userID, classList: newList}),
+      }
+      ).then(setState({...state, loaded: false}))
+      .catch(error => {
+        console.log(error);
+    });
+  }
+  update();
 }
 
 /**
