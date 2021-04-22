@@ -155,20 +155,20 @@ export default function Login()
                 </Grid>
               <DialogContent>
                 <DialogContentText className = "formHeader">
-                  Please fill in the fields below.
+                  Please fill in each of the fields below.
                 </DialogContentText>
-                  <TextField label = "ID" variant = "outlined" margin = "dense" onChange = {event => setId(event.target.value)} fullWidth/>
-                  <TextField label = "First Name" variant = "outlined" margin = "dense" onChange = {event => setFirstName(event.target.value)} fullWidth/>
-                  <TextField label = "Last Name" variant = "outlined" margin = "dense" onChange = {event => setLastName(event.target.value)} fullWidth/>
-                  <TextField label = "Major" variant = "outlined" margin = "dense" onChange = {event => setMajor(event.target.value)}  fullWidth/>
-                  <TextField label = "Email Address" variant = "outlined" margin = "dense" onChange = {event => setEmailAddress(event.target.value)}  fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" onChange = {event => setPassword(event.target.value)}  fullWidth/>
+                  
+                  <TextField label = "First Name" variant = "outlined" margin = "dense" error = {firstName === ""}  onChange = {event => setFirstName(event.target.value)} fullWidth/>
+                  <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {lastName === ""} onChange = {event => setLastName(event.target.value)} fullWidth/>
+                  <TextField label = "Major" variant = "outlined" margin = "dense" error = {major === ""} onChange = {event => setMajor(event.target.value)} fullWidth/>
+                  <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {emailAddress === ""} onChange = {event => setEmailAddress(event.target.value)} fullWidth/>
+                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {password === ""} onChange = {event => setPassword(event.target.value)} fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {signup}>
+                <Button onClick = {signup} disabled = {id === "" || firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
                   Sign Up
                 </Button>
               </DialogActions>
