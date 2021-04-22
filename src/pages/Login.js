@@ -168,7 +168,7 @@ export default function Login()
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {signup} disabled = {id === "" || firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
+                <Button onClick = {signup} disabled = {firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
                   Sign Up
                 </Button>
               </DialogActions>
