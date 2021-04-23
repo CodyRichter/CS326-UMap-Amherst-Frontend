@@ -18,7 +18,7 @@
     font-weight: bold;
 }
 
-.usernameField
+.emailField
 {
     text-align: center;
     margin-top: 30px;
@@ -30,7 +30,7 @@
     margin-top: 30px;
 }
 
-.usernameIcon
+.emailIcon
 {
     display: inline-flex;
     margin-top: 15px;

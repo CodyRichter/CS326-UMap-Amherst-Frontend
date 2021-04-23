@@ -63,14 +63,14 @@ export default function Login()
       );
     };
 
-    const [loginUsername, setLoginUsername] = useState("");
+    const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
 
     const login = () => 
     {
       axios.post('https://cs326-umap-amherst.herokuapp.com/savelogin', 
       {
-        username: loginUsername,
+        email: loginEmail,
         password: loginPassword
       })
       .then(function (response) 
@@ -122,11 +122,11 @@ export default function Login()
               Login
           </div>
 
-          <div className = "usernameField">
-            <Grid className = "usernameIcon">
+          <div className = "emailField">
+            <Grid className = "emailIcon">
               <PersonIcon/>
             </Grid>
-            <TextField label = "Username" variant = "outlined" onChange = {event => setLoginUsername(event.target.value)}/>
+            <TextField label = "Email Address" variant = "outlined" onChange = {event => setLoginEmail(event.target.value)}/>
           </div>
 
           <div className = "passwordField">
@@ -157,7 +157,7 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in each of the fields below.
                 </DialogContentText>
-                  
+                  <TextField label = "ID" variant = "outlined" margin = "dense" error = {id === ""} onChange = {event => setId(event.target.value)} fullWidth/>
                   <TextField label = "First Name" variant = "outlined" margin = "dense" error = {firstName === ""}  onChange = {event => setFirstName(event.target.value)} fullWidth/>
                   <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {lastName === ""} onChange = {event => setLastName(event.target.value)} fullWidth/>
                   <TextField label = "Major" variant = "outlined" margin = "dense" error = {major === ""} onChange = {event => setMajor(event.target.value)} fullWidth/>
@@ -168,7 +168,7 @@ export default function Login()
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {signup} disabled = {firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
+                <Button onClick = {signup} disabled = {id === "" || firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
                   Sign Up
                 </Button>
               </DialogActions>
