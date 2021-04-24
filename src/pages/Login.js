@@ -63,8 +63,8 @@ export default function Login()
         console.log(error);
       });
 
-      localStorage.setItem("user", JSON.stringify(loginUser));
-      JSON.parse(localStorage.getItem("user"));
+      //localStorage.setItem("user", JSON.stringify(loginUser));
+      //JSON.parse(localStorage.getItem("user"));
     };
 
     const [id, setId] = useState("");
