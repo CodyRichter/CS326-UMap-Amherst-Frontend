@@ -38,33 +38,14 @@ export default function Login()
         users: []
     });
 
-    const isEmpty = (fieldValue) =>
-    {
-      if (fieldValue === "") 
-      {
-        return true;
-      }
-      else if (fieldValue !== "")
-      {
-        return false;
-      }
-    }
-
-    const handleChange = (event) =>
-    {
-      const fieldName = event.target.name;
-      const fieldValue = event.target.value;
-
-      setField
-      (
-        { 
-          [fieldName]: fieldValue
-        }
-      );
-    };
-
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
+
+    const loginUser = 
+    [{
+      email: loginEmail,
+      password: loginPassword
+    }];
 
     const login = () => 
     {
@@ -81,6 +62,9 @@ export default function Login()
       {
         console.log(error);
       });
+
+      localStorage.setItem("user", JSON.stringify(loginUser));
+      JSON.parse(localStorage.getItem("user"));
     };
 
     const [id, setId] = useState("");
@@ -109,6 +93,8 @@ export default function Login()
       {
         console.log(error);
       });
+
+      closeForm();
     };
 
     return (
@@ -126,19 +112,19 @@ export default function Login()
             <Grid className = "emailIcon">
               <PersonIcon/>
             </Grid>
-            <TextField label = "Email Address" variant = "outlined" onChange = {event => setLoginEmail(event.target.value)}/>
+            <TextField label = "Email Address" variant = "outlined" error = {loginEmail === ""} onChange = {event => setLoginEmail(event.target.value)}/>
           </div>
 
           <div className = "passwordField">
             <Grid className = "passwordIcon">
               <LockIcon/>
             </Grid>
-            <TextField label = "Password" variant = "outlined" onChange = {event => setLoginPassword(event.target.value)}/>
+            <TextField label = "Password" type = "Password" variant = "outlined" error = {loginPassword === ""} onChange = {event => setLoginPassword(event.target.value)}/>
           </div>
 
           <div className = "loginButton">
             <Link to = "/" className = "loginLink">
-              <Button variant = "contained" onClick = {login}>
+              <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""}>
                 Login
               </Button>
             </Link>
@@ -162,7 +148,7 @@ export default function Login()
                   <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {lastName === ""} onChange = {event => setLastName(event.target.value)} fullWidth/>
                   <TextField label = "Major" variant = "outlined" margin = "dense" error = {major === ""} onChange = {event => setMajor(event.target.value)} fullWidth/>
                   <TextField label = "Email Address" variant = "outlined" margin = "dense" error = {emailAddress === ""} onChange = {event => setEmailAddress(event.target.value)} fullWidth/>
-                  <TextField label = "Password" variant = "outlined" margin = "dense" error = {password === ""} onChange = {event => setPassword(event.target.value)} fullWidth/>
+                  <TextField label = "Password" type = "Password" variant = "outlined" margin = "dense" error = {password === ""} onChange = {event => setPassword(event.target.value)} fullWidth/>
               </DialogContent>
               <DialogActions>
                 <Button onClick = {closeForm}>
