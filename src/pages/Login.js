@@ -63,8 +63,11 @@ export default function Login()
         console.log(error);
       });
 
-      //localStorage.setItem("user", JSON.stringify(loginUser));
-      //JSON.parse(localStorage.getItem("user"));
+      if (typeof window !== "undefined")
+      {
+        localStorage.setItem("user", JSON.stringify(loginUser));
+        console.log(localStorage.getItem("user"));
+      }
     };
 
     const [id, setId] = useState("");
