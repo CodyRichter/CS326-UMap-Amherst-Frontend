@@ -7,75 +7,41 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import MapIcon from "@material-ui/icons/Map";
+import axios from 'axios'
 
 export default function Classes() {
   const classes = useStyles();
 
   useEffect(() => {
     async function fetchData() {
+      let userJSON = JSON.parse(localStorage.getItem("user"));
+      let user = (await axios.get('https://cs326-umap-amherst.herokuapp.com/userid',{params:{email:userJSON[0].email, password:userJSON[0].password}})).data.results[0].id;
+      localStorage.setItem("userid", user);
+      state.userID = user;
+      state.email = userJSON[0].email.split("@")[0];
+      
       // Loads available classes to select from SQL
-      let availableClasses = await fetch(
-        "https://cs326-umap-amherst.herokuapp.com/classOptions",
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      ).then((res) => res.json());
-      // Loads available buildings to select from SQL
-      let availableBuildings = await fetch(
-        "https://cs326-umap-amherst.herokuapp.com/buildings",
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      ).then((res) => res.json());
-      // Loads current classes from database
-      let currentClasses = await fetch(
-        "https://cs326-umap-amherst.herokuapp.com/userclasses?userID=" +
-          state.userID,
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      ).then((res) => res.json());
+      let availableClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/classOptions');
 
+      // Loads available buildings to select from SQL
+      let availableBuildings = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings');
+
+      // Loads current classes from database
+      let currentClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/userclasses', {params:{userID:state.userID}});
+      
       let classIDs = [];
-      currentClasses.results.map((obj) => classIDs.push(obj.class));
+      currentClasses.data.results.map((obj) => classIDs.push(obj.class));
 
       let classData = [];
       for (let i = 0; i < classIDs.length; i++) {
-        let newClassData = await fetch(
-          "https://cs326-umap-amherst.herokuapp.com/classes?id=" + classIDs[i],
-          {
-            method: "GET",
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        ).then((res) => res.json());
-
-        classData.push(newClassData.results[0]);
+        let newClassData = await axios.get('https://cs326-umap-amherst.herokuapp.com/classes', {params:{id:classIDs[i]}});
+        classData.push(newClassData.data.results[0]);
       }
 
       let buildingNames = [];
       for (let i = 0; i < classData.length; i++) {
-        let newData = await fetch(
-          "https://cs326-umap-amherst.herokuapp.com/buildings?id=" +
-            classData[i].building,
-          {
-            method: "GET",
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        ).then((res) => res.json());
-        buildingNames.push(newData.results[0].name);
+        let newData = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings', {params:{id:classData[i].building}});
+        buildingNames.push(newData.data.results[0].name);
       }
 
       let newClassList = [];
@@ -99,8 +65,8 @@ export default function Classes() {
       setState({
         ...state,
         loaded: true,
-        availableClasses: availableClasses.results,
-        availableBuildings: availableBuildings.results,
+        availableClasses: availableClasses.data.results,
+        availableBuildings: availableBuildings.data.results,
         currentClasses: currentClasses.results,
         classList: newClassList,
       });
@@ -127,6 +93,7 @@ export default function Classes() {
     keyVal: 0,
     loaded: false,
     userID: 0,
+    email: "",
   });
   const handleChange = (event) => {
     const name = event.target.name;
@@ -228,8 +195,10 @@ export default function Classes() {
         <div className="classes-list" id="classes-list">
           <div className="classes-list-item">
             <div style={{ textAlign: "center" }}>
-              User ID: {state.userID} &nbsp;&nbsp;&nbsp; Showing{" "}
-              {state.classList.length} Classes
+              Welcome {state.email} (#{state.userID})
+            </div>
+            <div style={{ textAlign: "center" }}>
+              Showing {state.classList.length} Selected Classes
             </div>
           </div>
           {listDOM}
