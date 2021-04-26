@@ -33,7 +33,7 @@ export default function Home() {
     useEffect(() => {
         let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
         let userID = userData ? userData.id : -1;
-        if (userID !== -1) {
+        if (userID !== -1 && userID !== undefined) {
             axios.request({
                 method: 'get',
                 url: 'https://cs326-umap-amherst.herokuapp.com/home?userID=' + userID
