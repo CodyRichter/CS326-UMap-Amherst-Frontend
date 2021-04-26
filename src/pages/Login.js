@@ -38,6 +38,13 @@ export default function Login()
         users: []
     });
 
+    const [id, setId] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [major, setMajor] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
+    const [password, setPassword] = useState("");
+
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
 
@@ -57,25 +64,13 @@ export default function Login()
       .then(function (response) 
       {
         console.log(response);
+        localStorage.setItem("user", JSON.stringify([{email: loginEmail, id: response[0].id}]));
       })
       .catch(function (error) 
       {
         console.log(error);
       });
-
-      if (typeof window !== "undefined")
-      {
-        localStorage.setItem("user", JSON.stringify(loginUser));
-        console.log(localStorage.getItem("user"));
-      }
     };
-
-    const [id, setId] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [major, setMajor] = useState("");
-    const [emailAddress, setEmailAddress] = useState("");
-    const [password, setPassword] = useState("");
 
     const signup = () =>
     {
