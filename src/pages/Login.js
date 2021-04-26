@@ -64,7 +64,7 @@ export default function Login()
       .then(function (response) 
       {
         console.log(response);
-        localStorage.setItem("user", JSON.stringify([{email: loginEmail, id: response[0].id}]));
+        localStorage.setItem("user", JSON.stringify([{email: loginEmail, id: response.data.id}]));
       })
       .catch(function (error) 
       {
