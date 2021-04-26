@@ -12,17 +12,17 @@ export default function Home() {
 
     let [upcomingClasses, setUpcomingClasses] = useState([
         {
-            classname: 'Compsci 121',
-            time: '11:15 AM',
-            buildingname: 'ILC',
-            room: 'N151',
+            classname: 'Today',
+            time: 'No Upcoming Classes',
+            buildingname: '',
+            room: '',
         }
     ]);
 
     let [pitstops, setPitstops] = useState([
         {
-            time: '12:05PM',
-            location: 'Blue Wall'
+            time: '',
+            location: 'No Pitstops'
         }
     ]);
 
@@ -31,17 +31,24 @@ export default function Home() {
     let [route, setRoute] = useState(null);
 
     useEffect(() => {
-        axios.request({
-            method: 'get',
-            url: 'https://cs326-umap-amherst.herokuapp.com/home?userID=0'
-        }).then((res) => {
-            setUpcomingClasses(res.data['classes']);
-            setPitstops(res.data['stops']);
-            setTimeUntilNextClass(res.data['timeUntilNextClass']);
-            setRoute(res.data['route']);
-        }).catch((err) => {
-            console.log('Unable to connect to backend to load data.')
-        });
+        let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
+        let userID = userData ? userData.id : -1;
+        if (userID !== -1) {
+            axios.request({
+                method: 'get',
+                url: 'https://cs326-umap-amherst.herokuapp.com/home?userID=' + userID
+            }).then((res) => {
+                setUpcomingClasses(res.data['classes']);
+                setPitstops(res.data['stops']);
+                setTimeUntilNextClass(res.data['timeUntilNextClass']);
+                setRoute(res.data['route']);
+            }).catch((err) => {
+                console.log('Unable to connect to backend to load data.')
+            });
+        } else {
+            console.log('No user found. Current user data' + localStorage.getItem('user'))
+        }
+
     }, [])
 
     return (
