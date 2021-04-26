@@ -1,7 +1,7 @@
 import React from "react";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
 import TextField from "@material-ui/core/TextField";
-import {DataGrid} from "@material-ui/data-grid";
+import {GridOverlay, DataGrid} from "@material-ui/data-grid";
 import Grid from "@material-ui/core/Grid";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -18,8 +18,6 @@ import FormControl from "@material-ui/core/FormControl";
 import axios from 'axios'
 
 export default class Stops extends React.Component {
-
-
 
     constructor(props) {
         super(props);
@@ -60,17 +58,7 @@ export default class Stops extends React.Component {
                     )
                 }
                 ],
-            rows: [
-                { id: 0, location: 'Worcester Dining Commons', time: new Date(), selected: false},
-                { id: 1, location: 'Franklin Dining Commons', time: new Date(), selected: false},
-                { id: 2, location: 'Hampshire Dining Commons', time: new Date(), selected: false},
-                { id: 3, location: 'Berkshire Dining Commons', time: new Date(), selected: false},
-                { id: 4, location: 'Blue Wall', time: new Date(), selected: false},
-                { id: 5, location: 'Procrastination Station', time: new Date(), selected: false},
-                { id: 6, location: 'Roots Cafe', time: new Date(), selected: false},
-                { id: 7, location: 'Campus Center', time: new Date(), selected: false},
-                { id: 8, location: 'W.E.B. Du Bois Library', time: new Date(), selected: false}
-            ],
+            rows: [],
             selected: []
         };
         this.searchFilter = this.searchFilter.bind(this);
@@ -86,57 +74,55 @@ export default class Stops extends React.Component {
 
 
     getData = async () => {
-        // Once backend is hooked up
-        // Retrieve user selected data and fill this.state.rows
-        let userJSON = JSON.parse(localStorage.getItem("user"));
-        let user = (await axios.get('https://cs326-umap-amherst.herokuapp.com/userid',{params:{email:userJSON[0].email, password:userJSON[0].password}})).data.results[0].id;
 
-        localStorage.setItem("userid", user);
-        console.log("ID", user);
+        if (localStorage.getItem("user")) {
+            let userJSON = JSON.parse(localStorage.getItem("user"));
+            let user = userJSON.id;
 
-        let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
-        let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops',{params:{userID:user}});
+            let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
+            let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops', {params: {userID: user}});
 
-        let data = pitstops.data;
-        let selectedRows = selectedStops.data.results;
+            let data = pitstops.data;
+            let selectedRows = selectedStops.data.results;
 
-        let selectedRowIds = selectedStops.data.results.map(a => {
-            return a["stopid"];
-        });
-        let newRows = data.results.map(a => {
-            a["time"] = new Date();
-            a["selected"] = selectedRows.filter(b => {
-                return b["stopid"] === a["id"];
-            }).length !== 0;
-            if (a["selected"] === true) {
-                a["time"] = new Date(selectedRows.filter(b => {
+            let selectedRowIds = selectedStops.data.results.map(a => {
+                return a["stopid"];
+            });
+            let newRows = data.results.map(a => {
+                a["time"] = new Date();
+                a["selected"] = selectedRows.filter(b => {
                     return b["stopid"] === a["id"];
-                })[0]["stoptime"]);
-            }
-            return a;
-        });
-        this.setState({rows: newRows, selected: selectedRowIds});
-
+                }).length !== 0;
+                if (a["selected"] === true) {
+                    a["time"] = new Date(selectedRows.filter(b => {
+                        return b["stopid"] === a["id"];
+                    })[0]["stoptime"]);
+                }
+                return a;
+            });
+            this.setState({rows: newRows, selected: selectedRowIds});
+        }
     };
 
 
     saveData() {
-        // Once the backend is hooked up
-        // Send this.state.selected to it for database storage
 
-        axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
-            userID: localStorage.getItem("userid"),
-            rows: this.state.rows.filter(a => {
-                return a["selected"] === true
+        if (localStorage.getItem("user")) {
+            let userJSON = JSON.parse(localStorage.getItem("user"));
+            let user = userJSON.id;
+            axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
+                userID: user,
+                rows: this.state.rows.filter(a => {
+                    return a["selected"] === true
+                })
             })
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     handleChange (event) {
@@ -153,8 +139,6 @@ export default class Stops extends React.Component {
 
 
     render() {
-
-
 
         const classes = makeStyles((theme) => ({
             margin: {
@@ -197,6 +181,9 @@ export default class Stops extends React.Component {
                                               rs[params.data.id].selected = params.isSelected;
                                               this.setState({rows: rs});
                                           }}
+                                          components={{
+                                              NoRowsOverlay: CustomNoRowsOverlay
+                                          }}
 
                                 />
                             </CardContent>
@@ -212,7 +199,7 @@ export default class Stops extends React.Component {
                                     </Button>
                                 </Link>
 
-                                    <Button variant="contained" endIcon={<SaveIcon />} onClick={this.saveData}>
+                                    <Button disabled={!localStorage.getItem("user")} variant="contained" endIcon={<SaveIcon />} onClick={this.saveData}>
                                         Save Pit Stops
                                     </Button>
                             </Grid>
@@ -223,4 +210,12 @@ export default class Stops extends React.Component {
             </div>
         );
     }
+}
+
+function CustomNoRowsOverlay() {
+    return (
+        <GridOverlay >
+            <div >User is not logged in</div>
+        </GridOverlay>
+    );
 }
