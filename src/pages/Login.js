@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
 import axios from 'axios';
+import Alert from '@material-ui/lab/Alert';
 
 export default function Login() 
 {
@@ -48,12 +49,6 @@ export default function Login()
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
 
-    const loginUser = 
-    [{
-      email: loginEmail,
-      password: loginPassword
-    }];
-
     const login = () => 
     {
       axios.post('https://cs326-umap-amherst.herokuapp.com/savelogin', 
@@ -63,8 +58,14 @@ export default function Login()
       })
       .then(function (response) 
       {
+        const loginUser = 
+        [{
+          email: loginEmail,
+          id: response.data.id
+        }];
+
         console.log(response);
-        localStorage.setItem("user", JSON.stringify([{email: loginEmail, id: response.data.id}]));
+        localStorage.setItem("user", JSON.stringify(loginUser));
       })
       .catch(function (error) 
       {
@@ -121,11 +122,9 @@ export default function Login()
           </div>
 
           <div className = "loginButton">
-            <Link to = "/" className = "loginLink">
-              <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""}>
+            <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""} href = "/">
                 Login
-              </Button>
-            </Link>
+            </Button>
           </div>
 
           <div className = "createAccount">
@@ -166,7 +165,6 @@ export default function Login()
               </Button>
             </Link>
           </div>
-
       </div>
     );
 }
