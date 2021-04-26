@@ -62,15 +62,19 @@ export default function Home() {
                     <Grid item xs={12}>
                         <Card>
                             <CardContent>
-                                <Typography variant={'h6'}>Student Information</Typography>
+                                <Typography variant={'h6'}>Account Information</Typography>
 
                                 <Grid container direction="row" justify="flex-start" alignItems="center">
                                     <Grid item xs={2}>
                                         <Person fontSize={'large'} />
                                     </Grid>
                                     <Grid item xs={10}>
-                                        <Typography variant={'body1'}>John Doe</Typography>
-                                        <Typography variant={'subtitle1'}>Computer Science</Typography>
+                                        {localStorage.getItem('user') && localStorage.getItem('user')[0] ?
+                                            <Typography variant={'body1'}>{JSON.parse(localStorage.getItem('user'))[0].email}</Typography>
+                                            :
+                                            <Typography variant={'body1'}>Not Logged In.</Typography>
+                                        }
+
                                     </Grid>
                                 </Grid>
 
