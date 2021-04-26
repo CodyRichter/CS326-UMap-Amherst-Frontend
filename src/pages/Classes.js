@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,64 +15,77 @@ export default function Classes() {
 
   useEffect(() => {
     async function fetchData() {
-      let userJSON = JSON.parse(localStorage.getItem("user"));
-      let user = (await axios.get('https://cs326-umap-amherst.herokuapp.com/userid',{params:{email:userJSON[0].email, password:userJSON[0].password}})).data.results[0].id;
-      localStorage.setItem("userid", user);
-      state.userID = user;
-      state.email = userJSON[0].email.split("@")[0];
       
-      // Loads available classes to select from SQL
-      let availableClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/classOptions');
-
-      // Loads available buildings to select from SQL
-      let availableBuildings = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings');
-
-      // Loads current classes from database
-      let currentClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/userclasses', {params:{userID:state.userID}});
+      let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
+      let userID = userData ? userData.id : -1;
+      let userEmail = userData ? userData.email.split("@")[0] : "";
+      console.log(userData);
       
-      let classIDs = [];
-      currentClasses.data.results.map((obj) => classIDs.push(obj.class));
+      if (Number.isInteger(userID) && userID >=0) {
+        // Loads available classes to select from SQL
+        let availableClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/classOptions');
 
-      let classData = [];
-      for (let i = 0; i < classIDs.length; i++) {
-        let newClassData = await axios.get('https://cs326-umap-amherst.herokuapp.com/classes', {params:{id:classIDs[i]}});
-        classData.push(newClassData.data.results[0]);
+        // Loads available buildings to select from SQL
+        let availableBuildings = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings');
+
+        // Loads current classes from database
+        let currentClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/userclasses', {params:{userID:userID}});
+        
+        let classIDs = [];
+        currentClasses.data.results.map((obj) => classIDs.push(obj.class));
+
+        let classData = [];
+        for (let i = 0; i < classIDs.length; i++) {
+          let newClassData = await axios.get('https://cs326-umap-amherst.herokuapp.com/classes', {params:{id:classIDs[i]}});
+          classData.push(newClassData.data.results[0]);
+        }
+
+        let buildingNames = [];
+        for (let i = 0; i < classData.length; i++) {
+          let newData = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings', {params:{id:classData[i].building}});
+          buildingNames.push(newData.data.results[0].name);
+        }
+
+        let newClassList = [];
+        for (let i = 0; i < classData.length; i++) {
+          let days = "";
+          if (classData[i].monday === true) days += "Mon ";
+          if (classData[i].tuesday === true) days += "Tues ";
+          if (classData[i].wednesday === true) days += "Wed ";
+          if (classData[i].thursday === true) days += "Thurs ";
+          if (classData[i].friday === true) days += "Fri ";
+          let newClass = {
+            name: classData[i].name,
+            room: classData[i].room,
+            time: classData[i].time,
+            building: buildingNames[i],
+            days: days,
+          };
+          newClassList.push(newClass);
+        }
+      
+
+        setState({
+          ...state,
+          loaded: true,
+          validID: true,
+          userID: userID,
+          email: userEmail,
+          availableClasses: availableClasses.data.results,
+          availableBuildings: availableBuildings.data.results,
+          currentClasses: currentClasses.results,
+          classList: newClassList,
+        });
+      } else {
+        setState({
+          ...state,
+          loaded: true,
+          validID: false,
+          userID: userID,
+        });
       }
-
-      let buildingNames = [];
-      for (let i = 0; i < classData.length; i++) {
-        let newData = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings', {params:{id:classData[i].building}});
-        buildingNames.push(newData.data.results[0].name);
-      }
-
-      let newClassList = [];
-      for (let i = 0; i < classData.length; i++) {
-        let days = "";
-        if (classData[i].monday === true) days += "Mon ";
-        if (classData[i].tuesday === true) days += "Tues ";
-        if (classData[i].wednesday === true) days += "Wed ";
-        if (classData[i].thursday === true) days += "Thurs ";
-        if (classData[i].friday === true) days += "Fri ";
-        let newClass = {
-          name: classData[i].name,
-          room: classData[i].room,
-          time: classData[i].time,
-          building: buildingNames[i],
-          days: days,
-        };
-        newClassList.push(newClass);
-      }
-
-      setState({
-        ...state,
-        loaded: true,
-        availableClasses: availableClasses.data.results,
-        availableBuildings: availableBuildings.data.results,
-        currentClasses: currentClasses.results,
-        classList: newClassList,
-      });
     }
-    if (state.loaded === false) {
+    if (state.loaded === false && state.validID === false) {
       fetchData();
     }
   });
@@ -92,6 +106,7 @@ export default function Classes() {
     currentClasses: [],
     keyVal: 0,
     loaded: false,
+    validID: false,
     userID: 0,
     email: "",
   });
@@ -172,6 +187,29 @@ export default function Classes() {
           <div className="classes-list" id="classes-list">
             <div className="classes-list-item">
               <div>LOADING DATA...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (state.loaded === true && state.validID === false) {
+    return (
+      <div>
+        <div className="classes-dashboard">
+          <span className="classes-title">Class Schedule</span>
+          <div className="classes-list" id="classes-list">
+            <div className="classes-list-item">
+              <div>Invalid login credentials.</div>
+              <br />
+              <br />
+              <div>Please login again.</div>
+                <Link to="/login">
+                  <Button variant="contained" endIcon={<MapIcon />} id="classes-return">
+                    Login
+                  </Button>
+                </Link>
             </div>
           </div>
         </div>
