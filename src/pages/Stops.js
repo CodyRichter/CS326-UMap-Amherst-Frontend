@@ -88,9 +88,14 @@ export default class Stops extends React.Component {
     getData = async () => {
         // Once backend is hooked up
         // Retrieve user selected data and fill this.state.rows
+        let userJSON = JSON.parse(localStorage.getItem("user"));
+        let user = (await axios.get('https://cs326-umap-amherst.herokuapp.com/userid',{params:{email:userJSON[0].email, password:userJSON[0].password}})).data.results[0].id;
+
+        localStorage.setItem("userid", user);
+        console.log("ID", user);
 
         let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
-        let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops',{params:{userID:0}});
+        let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops',{params:{userID:user}});
 
         let data = pitstops.data;
         let selectedRows = selectedStops.data.results;
@@ -120,7 +125,7 @@ export default class Stops extends React.Component {
         // Send this.state.selected to it for database storage
 
         axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
-            userID: 0,
+            userID: localStorage.getItem("userid"),
             rows: this.state.rows.filter(a => {
                 return a["selected"] === true
             })
