@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/CS326-UMap-Amherst-Frontend/static/css/main.02dcf5f2.chunk.css",
-    "main.js": "/CS326-UMap-Amherst-Frontend/static/js/main.eb5c3f8b.chunk.js",
-    "main.js.map": "/CS326-UMap-Amherst-Frontend/static/js/main.eb5c3f8b.chunk.js.map",
+    "main.css": "/CS326-UMap-Amherst-Frontend/static/css/main.4e345b47.chunk.css",
+    "main.js": "/CS326-UMap-Amherst-Frontend/static/js/main.8290ba3c.chunk.js",
+    "main.js.map": "/CS326-UMap-Amherst-Frontend/static/js/main.8290ba3c.chunk.js.map",
     "runtime-main.js": "/CS326-UMap-Amherst-Frontend/static/js/runtime-main.0d3639d5.js",
     "runtime-main.js.map": "/CS326-UMap-Amherst-Frontend/static/js/runtime-main.0d3639d5.js.map",
-    "static/js/2.0669fe4b.chunk.js": "/CS326-UMap-Amherst-Frontend/static/js/2.0669fe4b.chunk.js",
-    "static/js/2.0669fe4b.chunk.js.map": "/CS326-UMap-Amherst-Frontend/static/js/2.0669fe4b.chunk.js.map",
+    "static/js/2.65c592a6.chunk.js": "/CS326-UMap-Amherst-Frontend/static/js/2.65c592a6.chunk.js",
+    "static/js/2.65c592a6.chunk.js.map": "/CS326-UMap-Amherst-Frontend/static/js/2.65c592a6.chunk.js.map",
     "index.html": "/CS326-UMap-Amherst-Frontend/index.html",
-    "static/css/main.02dcf5f2.chunk.css.map": "/CS326-UMap-Amherst-Frontend/static/css/main.02dcf5f2.chunk.css.map",
-    "static/js/2.0669fe4b.chunk.js.LICENSE.txt": "/CS326-UMap-Amherst-Frontend/static/js/2.0669fe4b.chunk.js.LICENSE.txt"
+    "static/css/main.4e345b47.chunk.css.map": "/CS326-UMap-Amherst-Frontend/static/css/main.4e345b47.chunk.css.map",
+    "static/js/2.65c592a6.chunk.js.LICENSE.txt": "/CS326-UMap-Amherst-Frontend/static/js/2.65c592a6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.0d3639d5.js",
-    "static/js/2.0669fe4b.chunk.js",
-    "static/css/main.02dcf5f2.chunk.css",
-    "static/js/main.eb5c3f8b.chunk.js"
+    "static/js/2.65c592a6.chunk.js",
+    "static/css/main.4e345b47.chunk.css",
+    "static/js/main.8290ba3c.chunk.js"
   ]
 }
