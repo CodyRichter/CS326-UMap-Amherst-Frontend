@@ -8,41 +8,52 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import MapIcon from "@material-ui/icons/Map";
-import axios from 'axios'
+import axios from "axios";
 
 export default function Classes() {
   const classes = useStyles();
 
   useEffect(() => {
+    // Attempt to fetch backend data
+    if (state.loaded === false && state.validID === false) fetchData();
+
+    // Loading data from backend
     async function fetchData() {
-      
-      let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
-      let userID = userData ? userData.id : -1;
-      let userEmail = userData ? userData.email.split("@")[0] : "";
-      console.log(userData);
-      
-      if (Number.isInteger(userID) && userID >=0) {
+      let userData =
+        localStorage.getItem("user") && localStorage.getItem("user")[0]
+          ? JSON.parse(localStorage.getItem("user"))[0]
+          : {};
+      let userID = userData.id ? userData.id : -1;
+      let userEmail = userData.email ? userData.email.split("@")[0] : "";
+
+      if (Number.isInteger(userID) && userID >= 0) {
         // Loads available classes to select from SQL
-        let availableClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/classOptions');
+        let availableClasses = await axios.get(state.backend + "/classOptions");
 
         // Loads available buildings to select from SQL
-        let availableBuildings = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings');
+        let availableBuildings = await axios.get(state.backend + "/buildings");
 
-        // Loads current classes from database
-        let currentClasses = await axios.get('https://cs326-umap-amherst.herokuapp.com/userclasses', {params:{userID:userID}});
-        
+        // Loads current user classes from database
+        let currentClasses = await axios.get(state.backend + "/userclasses", {
+          params: { userID: userID },
+        });
+
         let classIDs = [];
         currentClasses.data.results.map((obj) => classIDs.push(obj.class));
 
         let classData = [];
         for (let i = 0; i < classIDs.length; i++) {
-          let newClassData = await axios.get('https://cs326-umap-amherst.herokuapp.com/classes', {params:{id:classIDs[i]}});
+          let newClassData = await axios.get(state.backend + "/classes", {
+            params: { id: classIDs[i] },
+          });
           classData.push(newClassData.data.results[0]);
         }
 
         let buildingNames = [];
         for (let i = 0; i < classData.length; i++) {
-          let newData = await axios.get('https://cs326-umap-amherst.herokuapp.com/buildings', {params:{id:classData[i].building}});
+          let newData = await axios.get(state.backend + "/buildings", {
+            params: { id: classData[i].building },
+          });
           buildingNames.push(newData.data.results[0].name);
         }
 
@@ -63,8 +74,8 @@ export default function Classes() {
           };
           newClassList.push(newClass);
         }
-      
 
+        // Render loaded data
         setState({
           ...state,
           loaded: true,
@@ -77,6 +88,7 @@ export default function Classes() {
           classList: newClassList,
         });
       } else {
+        // Render invalid credentials
         setState({
           ...state,
           loaded: true,
@@ -85,11 +97,9 @@ export default function Classes() {
         });
       }
     }
-    if (state.loaded === false && state.validID === false) {
-      fetchData();
-    }
   });
 
+  // Component state
   const [state, setState] = useState({
     name: "",
     days: "",
@@ -109,7 +119,10 @@ export default function Classes() {
     validID: false,
     userID: 0,
     email: "",
+    backend: "https://cs326-umap-amherst.herokuapp.com",
   });
+
+  // Event handler
   const handleChange = (event) => {
     const name = event.target.name;
     setState({
@@ -172,13 +185,19 @@ export default function Classes() {
         <br />
         <br />
         <div>Try refreshing the page? Or add class through the add button!</div>
-          <Button variant="contained" endIcon={<MapIcon />} id="classes-return" onClick={()=>setState({...state, loaded:false})}>
-            Refresh
-          </Button>
+        <Button
+          variant="contained"
+          endIcon={<MapIcon />}
+          id="classes-return"
+          onClick={() => setState({ ...state, loaded: false })}
+        >
+          Refresh
+        </Button>
       </div>
     );
   }
 
+  // Data is loading
   if (state.loaded === false) {
     return (
       <div>
@@ -193,7 +212,8 @@ export default function Classes() {
       </div>
     );
   }
-  
+
+  // Invalid login credentials
   if (state.loaded === true && state.validID === false) {
     return (
       <div>
@@ -205,11 +225,15 @@ export default function Classes() {
               <br />
               <br />
               <div>Please login again.</div>
-                <Link to="/login">
-                  <Button variant="contained" endIcon={<MapIcon />} id="classes-return">
-                    Login
-                  </Button>
-                </Link>
+              <Link to="/login">
+                <Button
+                  variant="contained"
+                  endIcon={<MapIcon />}
+                  id="classes-return"
+                >
+                  Login
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -367,7 +391,12 @@ export default function Classes() {
         >
           Add New Class
         </button>
-        <Button variant="contained" endIcon={<MapIcon />} id="classes-save" onClick={() => save(state, setState)}>
+        <Button
+          variant="contained"
+          endIcon={<MapIcon />}
+          id="classes-save"
+          onClick={() => save(state, setState)}
+        >
           Save Classes
         </Button>
         <a href="#/">
@@ -380,35 +409,30 @@ export default function Classes() {
   );
 }
 
+/**
+ * Saves new classes
+ * @param state - current component state
+ * @param setState - component setState fuction
+ */
 function save(state, setState) {
   let newList = state.classList;
   async function update() {
-    for (let i=0; i < newList.length; i++) {
-      let ids = await fetch(
-      "https://cs326-umap-amherst.herokuapp.com/buildings?name='"+newList[i].building+"'",
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-      ).then((res) => res.json());
-      newList[i].building = ids.results[0].id;
+    for (let i = 0; i < newList.length; i++) {
+      let ids = await axios.get(state.backend + "/buildings", {
+        params: { name: "'" + newList[i].building + "'" },
+      });
+      newList[i].building = ids.data.results[0].id;
     }
-    console.log(newList);
-    fetch(
-      "https://cs326-umap-amherst.herokuapp.com/saveclasses",
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({userID: state.userID, classList: newList}),
-      }
-      ).then(setState({...state, loaded: false}))
-      .catch(error => {
+
+    axios
+      .post(state.backend + "/saveclasses", {
+        userID: state.userID,
+        classList: newList,
+      })
+      .then(setState({ ...state, loaded: false }))
+      .catch((error) => {
         console.log(error);
-    });
+      });
   }
   update();
 }
