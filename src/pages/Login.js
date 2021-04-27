@@ -110,7 +110,7 @@ export default function Login()
           </div>
 
           <div className = "loginButton">
-            <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""} href = "/">
+            <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""} href = "/CS326-UMap-Amherst-Frontend/#">
                 Login
             </Button>
           </div>
