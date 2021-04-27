@@ -76,8 +76,8 @@ export default class Stops extends React.Component {
     getData = async () => {
 
         if (localStorage.getItem("user")) {
-            let userJSON = JSON.parse(localStorage.getItem("user"));
-            let user = userJSON.id;
+            let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
+            let user = userData ? userData.id : -1;
 
             let pitstops = await axios.get('https://cs326-umap-amherst.herokuapp.com/pitstops');
             let selectedStops = await axios.get('https://cs326-umap-amherst.herokuapp.com/userpitstops', {params: {userID: user}});
@@ -193,7 +193,7 @@ export default class Stops extends React.Component {
                     <Grid item xs={12}>
                         <Grid container direction="row" justifyContent="flex-end" alignItems="center">
                             <Grid item xs={12} style={{textAlign: "right"}}>
-                                <Link to="/" style={{textDecoration:"none"}}>
+                                <Link to="/" style={{textDecoration:"none", marginRight: "20px"}}>
                                     <Button variant="contained" endIcon={<MapIcon />}>
                                         Return to Map
                                     </Button>

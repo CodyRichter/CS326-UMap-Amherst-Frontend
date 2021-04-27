@@ -23,7 +23,7 @@ export default function Classes() {
         localStorage.getItem("user") && localStorage.getItem("user")[0]
           ? JSON.parse(localStorage.getItem("user"))[0]
           : {};
-      let userID = userData.id ? userData.id : -1;
+      let userID = userData ? userData.id : -1;
       let userEmail = userData.email ? userData.email.split("@")[0] : "";
 
       if (Number.isInteger(userID) && userID >= 0) {
