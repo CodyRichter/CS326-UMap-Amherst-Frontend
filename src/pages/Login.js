@@ -128,7 +128,6 @@ export default function Login()
                 <DialogContentText className = "formHeader">
                   Please fill in each of the fields below.
                 </DialogContentText>
-                  <TextField label = "ID" variant = "outlined" margin = "dense" error = {id === ""} onChange = {event => setId(event.target.value)} fullWidth/>
                   <TextField label = "First Name" variant = "outlined" margin = "dense" error = {firstName === ""}  onChange = {event => setFirstName(event.target.value)} fullWidth/>
                   <TextField label = "Last Name" variant = "outlined" margin = "dense" error = {lastName === ""} onChange = {event => setLastName(event.target.value)} fullWidth/>
                   <TextField label = "Major" variant = "outlined" margin = "dense" error = {major === ""} onChange = {event => setMajor(event.target.value)} fullWidth/>
@@ -139,7 +138,7 @@ export default function Login()
                 <Button onClick = {closeForm}>
                   Close
                 </Button>
-                <Button onClick = {signup} disabled = {id === "" || firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
+                <Button onClick = {signup} disabled = {firstName === "" || lastName === "" || major === "" || emailAddress === "" || password === ""}>
                   Sign Up
                 </Button>
               </DialogActions>
