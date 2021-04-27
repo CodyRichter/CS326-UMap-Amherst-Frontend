@@ -2,6 +2,9 @@
 
 This is the frontend of the UMap Amherst CS 326 project. It is written in React.
 
+### Website Link
+https://cody.richter.codes/CS326-UMap-Amherst-Frontend/
+
 ## Backend
 
 Link to backend server: https://github.com/CodyRichter/CS326-UMap-Amherst-Backend

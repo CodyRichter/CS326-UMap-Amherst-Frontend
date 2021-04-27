@@ -14,87 +14,86 @@ export default function Classes() {
   const classes = useStyles();
 
   useEffect(() => {
-    // Attempt to fetch backend data
-    if (state.loaded === false && state.validID === false) fetchData();
-
     // Loading data from backend
-    async function fetchData() {
-      let userData =
-        localStorage.getItem("user") && localStorage.getItem("user")[0]
-          ? JSON.parse(localStorage.getItem("user"))[0]
-          : {};
-      let userID = userData ? userData.id : -1;
-      let userEmail = userData.email ? userData.email.split("@")[0] : "";
+    async () => {
+      if (state.loaded === false && state.validID === false) {
+        let userData =
+          localStorage.getItem("user") && localStorage.getItem("user")[0]
+            ? JSON.parse(localStorage.getItem("user"))[0]
+            : {};
+        let userID = userData ? userData.id : -1;
+        let userEmail = userData.email ? userData.email.split("@")[0] : "";
 
-      if (Number.isInteger(userID) && userID >= 0) {
-        // Loads available classes to select from SQL
-        let availableClasses = await axios.get(state.backend + "/classOptions");
+        if (Number.isInteger(userID) && userID >= 0) {
+          // Loads available classes to select from SQL
+          let availableClasses = await axios.get(state.backend + "/classOptions");
 
-        // Loads available buildings to select from SQL
-        let availableBuildings = await axios.get(state.backend + "/buildings");
+          // Loads available buildings to select from SQL
+          let availableBuildings = await axios.get(state.backend + "/buildings");
 
-        // Loads current user classes from database
-        let currentClasses = await axios.get(state.backend + "/userclasses", {
-          params: { userID: userID },
-        });
-
-        let classIDs = [];
-        currentClasses.data.results.map((obj) => classIDs.push(obj.class));
-
-        let classData = [];
-        for (let i = 0; i < classIDs.length; i++) {
-          let newClassData = await axios.get(state.backend + "/classes", {
-            params: { id: classIDs[i] },
+          // Loads current user classes from database
+          let currentClasses = await axios.get(state.backend + "/userclasses", {
+            params: { userID: userID },
           });
-          classData.push(newClassData.data.results[0]);
-        }
 
-        let buildingNames = [];
-        for (let i = 0; i < classData.length; i++) {
-          let newData = await axios.get(state.backend + "/buildings", {
-            params: { id: classData[i].building },
+          let classIDs = [];
+          currentClasses.data.results.map((obj) => classIDs.push(obj.class));
+
+          let classData = [];
+          for (let i = 0; i < classIDs.length; i++) {
+            let newClassData = await axios.get(state.backend + "/classes", {
+              params: { id: classIDs[i] },
+            });
+            classData.push(newClassData.data.results[0]);
+          }
+
+          let buildingNames = [];
+          for (let i = 0; i < classData.length; i++) {
+            let newData = await axios.get(state.backend + "/buildings", {
+              params: { id: classData[i].building },
+            });
+            buildingNames.push(newData.data.results[0].name);
+          }
+
+          let newClassList = [];
+          for (let i = 0; i < classData.length; i++) {
+            let days = "";
+            if (classData[i].monday === true) days += "Mon ";
+            if (classData[i].tuesday === true) days += "Tues ";
+            if (classData[i].wednesday === true) days += "Wed ";
+            if (classData[i].thursday === true) days += "Thurs ";
+            if (classData[i].friday === true) days += "Fri ";
+            let newClass = {
+              name: classData[i].name,
+              room: classData[i].room,
+              time: classData[i].time,
+              building: buildingNames[i],
+              days: days,
+            };
+            newClassList.push(newClass);
+          }
+
+          // Render loaded data
+          setState({
+            ...state,
+            loaded: true,
+            validID: true,
+            userID: userID,
+            email: userEmail,
+            availableClasses: availableClasses.data.results,
+            availableBuildings: availableBuildings.data.results,
+            currentClasses: currentClasses.results,
+            classList: newClassList,
           });
-          buildingNames.push(newData.data.results[0].name);
+        } else {
+          // Render invalid credentials
+          setState({
+            ...state,
+            loaded: true,
+            validID: false,
+            userID: userID,
+          });
         }
-
-        let newClassList = [];
-        for (let i = 0; i < classData.length; i++) {
-          let days = "";
-          if (classData[i].monday === true) days += "Mon ";
-          if (classData[i].tuesday === true) days += "Tues ";
-          if (classData[i].wednesday === true) days += "Wed ";
-          if (classData[i].thursday === true) days += "Thurs ";
-          if (classData[i].friday === true) days += "Fri ";
-          let newClass = {
-            name: classData[i].name,
-            room: classData[i].room,
-            time: classData[i].time,
-            building: buildingNames[i],
-            days: days,
-          };
-          newClassList.push(newClass);
-        }
-
-        // Render loaded data
-        setState({
-          ...state,
-          loaded: true,
-          validID: true,
-          userID: userID,
-          email: userEmail,
-          availableClasses: availableClasses.data.results,
-          availableBuildings: availableBuildings.data.results,
-          currentClasses: currentClasses.results,
-          classList: newClassList,
-        });
-      } else {
-        // Render invalid credentials
-        setState({
-          ...state,
-          loaded: true,
-          validID: false,
-          userID: userID,
-        });
       }
     }
   });
@@ -189,7 +188,7 @@ export default function Classes() {
           variant="contained"
           endIcon={<MapIcon />}
           id="classes-return"
-          onClick={() => setState({ ...state, loaded: false })}
+          onClick={() => setState({ ...state, loaded: false, validID: false })}
         >
           Refresh
         </Button>
@@ -416,7 +415,7 @@ export default function Classes() {
  */
 function save(state, setState) {
   let newList = state.classList;
-  async function update() {
+  async () => {
     for (let i = 0; i < newList.length; i++) {
       let ids = await axios.get(state.backend + "/buildings", {
         params: { name: "'" + newList[i].building + "'" },
@@ -429,12 +428,11 @@ function save(state, setState) {
         userID: state.userID,
         classList: newList,
       })
-      .then(setState({ ...state, loaded: false }))
+      .then(setState({ ...state, loaded: false, validID: false }))
       .catch((error) => {
         console.log(error);
       });
   }
-  update();
 }
 
 /**
