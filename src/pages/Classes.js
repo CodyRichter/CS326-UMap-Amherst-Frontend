@@ -15,7 +15,7 @@ export default function Classes() {
 
   useEffect(() => {
     // Loading data from backend
-    async () => {
+    (async () => {
       if (state.loaded === false && state.validID === false) {
         let userData =
           localStorage.getItem("user") && localStorage.getItem("user")[0]
@@ -95,7 +95,7 @@ export default function Classes() {
           });
         }
       }
-    }
+    })();
   });
 
   // Component state
@@ -415,7 +415,7 @@ export default function Classes() {
  */
 function save(state, setState) {
   let newList = state.classList;
-  async () => {
+  (async () => {
     for (let i = 0; i < newList.length; i++) {
       let ids = await axios.get(state.backend + "/buildings", {
         params: { name: "'" + newList[i].building + "'" },
@@ -432,7 +432,7 @@ function save(state, setState) {
       .catch((error) => {
         console.log(error);
       });
-  }
+  })();
 }
 
 /**
