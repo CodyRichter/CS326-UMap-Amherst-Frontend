@@ -26,7 +26,7 @@ export default function Login()
       isOpen(false);
     }
 
-    const [id, setId] = useState("");
+    const [id] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [major, setMajor] = useState("");
