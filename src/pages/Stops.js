@@ -108,8 +108,8 @@ export default class Stops extends React.Component {
     saveData() {
 
         if (localStorage.getItem("user")) {
-            let userJSON = JSON.parse(localStorage.getItem("user"));
-            let user = userJSON.id;
+            let userData = localStorage.getItem('user') && localStorage.getItem('user')[0] ? JSON.parse(localStorage.getItem('user'))[0] : {};
+            let user = userData ? userData.id : -1;
             axios.post('https://cs326-umap-amherst.herokuapp.com/savepitstops', {
                 userID: user,
                 rows: this.state.rows.filter(a => {

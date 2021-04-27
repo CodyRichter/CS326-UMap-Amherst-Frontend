@@ -10,7 +10,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import {Link} from "react-router-dom";
 import axios from 'axios';
 
 export default function Login() 
@@ -54,6 +53,7 @@ export default function Login()
 
         console.log(response);
         localStorage.setItem("user", JSON.stringify(loginUser));
+        window.location.href = "/CS326-UMap-Amherst-Frontend/#";
       })
       .catch(function (error) 
       {
@@ -110,7 +110,7 @@ export default function Login()
           </div>
 
           <div className = "loginButton">
-            <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""} href = "/CS326-UMap-Amherst-Frontend/#">
+            <Button variant = "contained" onClick = {login} disabled = {loginEmail === "" || loginPassword === ""}>
                 Login
             </Button>
           </div>
@@ -143,14 +143,6 @@ export default function Login()
                 </Button>
               </DialogActions>
             </Dialog>
-          </div>
-
-          <div className = "guest">
-            <Link to = "/" className = "guestLink">
-              <Button>
-                Use as Guest
-              </Button>
-            </Link>
           </div>
       </div>
     );
