@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {Link} from "react-router-dom";
 import axios from 'axios';
-import Alert from '@material-ui/lab/Alert';
 
 export default function Login() 
 {
@@ -27,17 +26,6 @@ export default function Login()
     {
       isOpen(false);
     }
-
-    const [field, setField] = useState
-    ({
-        id: "",
-        firstName: "",
-        lastName: "",
-        major: "",
-        emailAddress: "",
-        password: "",
-        users: []
-    });
 
     const [id, setId] = useState("");
     const [firstName, setFirstName] = useState("");
